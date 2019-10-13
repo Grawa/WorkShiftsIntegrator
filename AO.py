@@ -455,8 +455,6 @@ class Ui(QWidget):
 
             """)
 
-
-
 app = QApplication([])
 window = Ui()
 window.show()
