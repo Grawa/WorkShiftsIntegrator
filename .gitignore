@@ -1,0 +1,12 @@
+# Default ignored files
+/workspace.xml
+
+# Ignora pycache
+/__pycache__
+__pycache__
+.idea
+
+# Ignora altri file
+timetunedbTEST.db
+Note_sulla_compilazione.txt
+
