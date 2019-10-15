@@ -242,7 +242,7 @@ class DBTurni:
         return f
 
 
-class ManagerTurni:
+class ManagerTurni():
     """
     gestisce le operazioni sui turni (li inserisce su db,esegue i cambi turno e altre funzioni di alto livello)
     :param dipendente: stringa con COGNOME e NOME del dipendente (es. mario rossi)
@@ -312,6 +312,10 @@ class Ui(QWidget):
         self.pushButton_2.setEnabled(False)
         self.pushButton_3.setEnabled(False)
         self.pushButton_4.setEnabled(False)
+        self.pushButton_9.setEnabled(False)
+        if not os.path.exists(f"{os.environ['HOMEDRIVE']}\\Program Files\\Google\\Drive\\googledrivesync.exe"):
+            self.pushButton_drivesync.setText("Google Drive sync non disponibile")
+            self.pushButton_drivesync.setEnabled(False)
 
     def ricarica_tabella(self):
         try:
@@ -369,6 +373,7 @@ class Ui(QWidget):
             self.pushButton.setText("Cambia...")
             self.pushButton_4.setEnabled(True)  # abilita tasto aggiorna per db
             self.pushButton_2.setEnabled(True)  # abilita tasto per selezionare db
+            self.pushButton_9.setEnabled(True)  # abilita tasto per selezionare comandi sql manuali
         except:
             QtWidgets.QMessageBox.warning(window, "Errore", "File vuoto o non riconosciuto!")
 
@@ -455,7 +460,38 @@ class Ui(QWidget):
 
             """)
 
+    def googledrivesync_pulsante(self):
+        QtWidgets.QMessageBox.information(window, "Info", "Avvio di Google Drive sync...\n\nNota:\n"
+                                                  "Il programma potrebbe avviarsi ridotto a icona.")
+        print(os.startfile(f"{os.environ['HOMEDRIVE']}\\Program Files\\Google\\Drive\\googledrivesync.exe"))
+
+    def comandi_sql_manuali_pulsante(self):
+        window2.show()
+
+
+
+class UiComandiSql(QWidget):
+    def __init__(self):
+
+        super().__init__()
+        try:
+            uic.loadUi("CSQL.ui", self)
+        except:
+            print("Errore: File AO.ui non trovato")
+            time.sleep(5)
+
+    def invio_pulsante(self):
+        comando = self.lineEdit.text()
+        try:
+            risposta = filedb1._sqlcommand(str(comando))
+            self.textBrowser.setText(str(risposta))
+        except:
+            self.textBrowser.setText(f"COMANDO SQL NON RICONOSCIUTO")
+
+
 app = QApplication([])
 window = Ui()
+window2 = UiComandiSql()
 window.show()
 app.exec()
+
