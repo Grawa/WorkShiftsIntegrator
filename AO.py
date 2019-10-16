@@ -54,9 +54,10 @@ class FileTurni:
         return listaelem
 
     def lista_elementi_in_tabellone(self, dipendente):
+        "crea una lista con data e turno (es. '2019-10-07, 08:30-14:30',...)"
         lista_elem = []
-        for turnkey, turnvalue in self.turni_mensili(dipendente).items():
-            lista_elem.append(turnkey + " " + turnvalue)
+        for data, turno in self.turni_mensili(dipendente).items():
+            lista_elem.append(f"{data}, {turno}")
         return lista_elem
 
     def elenco_dipendenti(self):
@@ -243,20 +244,20 @@ class ManagerTurni:
     def inserisci_tutti_i_turni_su_db(self):
         """
         inserisce tutti i turni sul database
-        :return ritorna piu dizionari con l'esito delle operazioni: dizturni, turni_scritti, turni_saltati, errori
-        I turni_saltati sono quelli già inclusi nel database mentre gli errori sono quelli gia inclusi nella tabella.
+        :return ritorna piu liste con l'esito delle operazioni: dizturni, turni_scritti, turni_saltati, errori
+        I turni_saltati sono quelli già inclusi nel database mentre gli errori sono quelli non inclusi nella tabella.
         """
 
         self.dbturnimensile.ottimizza_db()                                           # elimina vecchi turni sul database
         dizturni = self.fileturni.turni_mensili(self.dipendente)                     # dizionario con i turni mensili
 
-        errori = {}
-        turni_scritti = {}
-        turni_saltati = {}
+        errori = []
+        turni_scritti = []
+        turni_saltati = []
 
         for data, turno in dizturni.items():                                         # restituisce data e turno singoli
             if self.filetabella.verifica_presenza_turno_su_tabella(turno) is False:  # c.errori: in caso di nuovi turni
-                errori[data] = turno
+                errori.append(f"{data}, {turno}")
 
             elif self.dbturnimensile.verifica_presenza_turno_su_db(data) is False:   # controlla se la data è già nel db
                 turno_da_scrivere = self.filetabella.cerca_nella_tabella(turno)
@@ -264,11 +265,15 @@ class ManagerTurni:
                 notifica = turno_da_scrivere[0][2]
                 parcheggio = self.fileturni.verifica_parcheggio(data, turno)
                 self.dbturnimensile.scrivi_turno(data, note, notifica, parcheggio)   # scrive il turno su db
-                turni_scritti[data] = turno                                          # aggiunge i turni scritti
+                turni_scritti.append(f"{data}, {turno}")                                     # aggiunge i turni scritti
             else:
-                turni_saltati[data] = turno                                          # indica eventuali turni saltati
+                turni_saltati.append(f"{data}, {turno}")                                     # indica eventuali turni saltati
 
-        return dizturni, turni_scritti, turni_saltati, errori
+        lista_turni = []
+        for data, turno in dizturni.items():
+            lista_turni.append(f"{data}, {turno}")
+
+        return lista_turni, turni_scritti, turni_saltati, errori
 
 
 class Ui(QWidget):
@@ -352,10 +357,10 @@ class Ui(QWidget):
     def inserisci_turni_pulsante(self):
         try:
             manager1 = ManagerTurni(nome_dip2, fileturni1, filetabella1, filedb1)
-            dizturni, turni_scritti, turni_saltati, errori = manager1.inserisci_tutti_i_turni_su_db()
+            lista_turni, turni_scritti, turni_saltati, errori = manager1.inserisci_tutti_i_turni_su_db()
             self.aggiorna_gui_turni()
             self.listWidget_2.clear()
-            self.listWidget_2.addItem(f"Turni trovati: {len(dizturni)}")
+            self.listWidget_2.addItem(f"Turni trovati: {len(lista_turni)}")
             self.listWidget_2.addItem(f"Turni scritti: {len(turni_scritti)}")
             self.listWidget_2.addItem(f"Turni saltati(già su db): {len(turni_saltati)}")
             self.listWidget_2.addItem(f"Turni non in lista(errori): {len(errori)}")
@@ -363,7 +368,7 @@ class Ui(QWidget):
             self.listWidget_6.clear()
             self.listWidget_5.clear()
             self.listWidget_4.clear()
-            self.listWidget_7.addItems(dizturni)
+            self.listWidget_7.addItems(lista_turni)
             self.listWidget_6.addItems(turni_scritti)
             self.listWidget_5.addItems(turni_saltati)
             self.listWidget_4.addItems(errori)
