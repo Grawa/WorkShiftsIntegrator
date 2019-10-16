@@ -242,7 +242,7 @@ class DBTurni:
         return f
 
 
-class ManagerTurni():
+class ManagerTurni:
     """
     gestisce le operazioni sui turni (li inserisce su db,esegue i cambi turno e altre funzioni di alto livello)
     :param dipendente: stringa con COGNOME e NOME del dipendente (es. mario rossi)
@@ -474,15 +474,13 @@ class Ui(QWidget):
         window2.show()
 
 
-
 class UiComandiSql(QWidget):
     def __init__(self):
-
         super().__init__()
         try:
             uic.loadUi("CSQL.ui", self)
-        except:
-            print("Errore: File AO.ui non trovato")
+        except FileNotFoundError:
+            print("Errore: File CSQL.ui non trovato")
             time.sleep(5)
 
     def invio_pulsante(self):
@@ -491,7 +489,16 @@ class UiComandiSql(QWidget):
             risposta = filedb1._sqlcommand(str(comando))
             self.textBrowser.setText(str(risposta))
         except:
-            self.textBrowser.setText(f"COMANDO SQL NON RICONOSCIUTO")
+            self.textBrowser.setText(f"COMANDO SQL NON RICONOSCIUTO.")
+
+    def elimina_pulsante(self):
+        self.lineEdit.setText("DELETE FROM reminders WHERE _id=' ' ")
+
+    def seleziona_pulsante(self):
+        self.lineEdit.setText("SELECT * FROM reminders")
+
+    def cerca_pulsante(self):
+        self.lineEdit.setText("SELECT * FROM reminders WHERE reminder_date LIKE ' '")
 
 
 app = QApplication([])

@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>679</width>
+    <width>777</width>
     <height>325</height>
    </rect>
   </property>
@@ -17,7 +17,7 @@
    <item>
     <widget class="QLabel" name="label">
      <property name="text">
-      <string>Comandi SQL manuali verso il database</string>
+      <string>Query SQLite:</string>
      </property>
     </widget>
    </item>
@@ -27,7 +27,7 @@
       <widget class="QLineEdit" name="lineEdit"/>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton">
+      <widget class="QPushButton" name="pushButton_invio">
        <property name="text">
         <string>Invio</string>
        </property>
@@ -36,21 +36,70 @@
     </layout>
    </item>
    <item>
-    <widget class="QTextBrowser" name="textBrowser"/>
+    <layout class="QGridLayout" name="gridLayout_3">
+     <property name="topMargin">
+      <number>0</number>
+     </property>
+     <item row="1" column="1">
+      <widget class="QTextBrowser" name="textBrowser"/>
+     </item>
+     <item row="2" column="1">
+      <layout class="QGridLayout" name="gridLayout_2">
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <item row="0" column="0">
+        <widget class="QLabel" name="label_2">
+         <property name="text">
+          <string>Comandi rapidi:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="QPushButton" name="pushButton_seleziona">
+         <property name="text">
+          <string>Seleziona...</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QPushButton" name="pushButton_cancella">
+         <property name="text">
+          <string>Elimina reminder...</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="2">
+        <widget class="QPushButton" name="pushButton_cerca">
+         <property name="text">
+          <string>Cerca...</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item row="0" column="1">
+      <widget class="QLabel" name="label_3">
+       <property name="text">
+        <string>Risposta dal db:</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </item>
   </layout>
  </widget>
  <resources/>
  <connections>
   <connection>
-   <sender>pushButton</sender>
+   <sender>pushButton_invio</sender>
    <signal>clicked()</signal>
    <receiver>Form</receiver>
    <slot>invio_pulsante()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>643</x>
-     <y>42</y>
+     <x>766</x>
+     <y>51</y>
     </hint>
     <hint type="destinationlabel">
      <x>640</x>
@@ -58,8 +107,60 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>pushButton_cancella</sender>
+   <signal>clicked()</signal>
+   <receiver>Form</receiver>
+   <slot>elimina_pulsante()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>163</x>
+     <y>302</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>174</x>
+     <y>319</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_seleziona</sender>
+   <signal>clicked()</signal>
+   <receiver>Form</receiver>
+   <slot>seleziona_pulsante()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>263</x>
+     <y>303</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>338</x>
+     <y>318</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_cerca</sender>
+   <signal>clicked()</signal>
+   <receiver>Form</receiver>
+   <slot>cerca_pulsante()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>706</x>
+     <y>303</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>738</x>
+     <y>318</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>invio_pulsante()</slot>
+  <slot>elimina_pulsante()</slot>
+  <slot>seleziona_pulsante()</slot>
+  <slot>cerca_pulsante()</slot>
+  <slot>inserisci_pulsante()</slot>
  </slots>
 </ui>
