@@ -331,7 +331,6 @@ class Ui(QWidget):
             QtWidgets.QMessageBox.warning(window, "Errore", 'Lista vuota (per iniziare clicca "Seleziona...")'
                                                             ' o dipendente non trovato!')
 
-
     def carica_database(self):
         try:
             perc_filedb, _ = QtWidgets.QFileDialog.getOpenFileName(self, 'Seleziona file...', QtCore.QDir.rootPath(),
@@ -470,9 +469,11 @@ class UiComandiSql(QWidget):
         self.lineEdit.setText("SELECT * FROM reminders WHERE reminder_date LIKE ' '")
 
 
-app = QApplication([])
-window = Ui()
-window2 = UiComandiSql()
-window.show()
-app.exec()
+if __name__ == "__main__":
+    app = QApplication([])
+    window = Ui()
+    window2 = UiComandiSql()
+    window.show()
+    app.exec()
+
 
