@@ -80,17 +80,17 @@
        </property>
       </widget>
      </item>
-     <item row="2" column="2">
-      <widget class="QPushButton" name="pushButton_9">
-       <property name="text">
-        <string>Comandi SQL manuali</string>
-       </property>
-      </widget>
-     </item>
      <item row="2" column="1">
       <widget class="QPushButton" name="pushButton_drivesync">
        <property name="text">
         <string>Avvia Google Drive sync...</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="0">
+      <widget class="QPushButton" name="pushButton_9">
+       <property name="text">
+        <string>Comandi SQL manuali</string>
        </property>
       </widget>
      </item>

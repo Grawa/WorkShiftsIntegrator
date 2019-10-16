@@ -444,19 +444,24 @@ class Ui(QWidget):
         QtWidgets.QMessageBox.information(window, "Info", """
                                                         Guida:
         
-        1) Fare il backup del database da cellulare (consigliato su Google Drive)
+        1) Fare il backup del database da cellulare (consigliato su Google Drive)...
             (app TimeTune>Impostazioni>Backup)
            
-        2) Dopo aver fatto il backup del db dal cellulare è possibile caricare i turni:
-            in alternativa si perderanno eventuali cambi e variazioni
-            di turno eseguite tramite l'app
            
-        3) Ripristinare il database sul cellulare
+        2) Selezionare il Database del backup e il Tabellone e
+           Cliccare "Inserisci turni su database".
+           
+            Nota: è importante creare sempre il backup del database aggiornato 
+            prima di scrivere i turni nuovi, in alternativa si perderanno 
+            eventuali cambi e variazioni di turno eseguite tramite l'app.
+           
+           
+        3) Ripristinare il database sul cellulare...
             (app TimeTune>Impostazioni>Backup)
             
             Nota: In caso di backup su Google Drive, da pc accertarsi
-            che il backup sia stato caricato correttamente e sul cellulare
-            di scaricare la copia aggiornata del file.
+            che il backup sia stato caricato correttamente da pc e sul
+            cellulare di scaricare la copia aggiornata del file.
 
             """)
 
