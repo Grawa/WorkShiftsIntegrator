@@ -34,7 +34,7 @@ class FileTurni:
                             dizturni[str(data_turno.value.date())] = cella2.value  # crea un dizionario con {data:turno}
         return dizturni
 
-    def _lista_elementi_in_colonna(self, tipo):                      # metodo principalmente ad uso  interno alla classe
+    def _lista_elementi_in_colonna(self, tipo):                      # metodo ad uso interno alla classe
         """
         elenca gli elementi in una colonna (non in riga come per il metodo .turni_mensili)
         :param tipo: Altamente raccomandato scegliere tra Nominativo, Contratto, Modulo e Skill
@@ -43,15 +43,15 @@ class FileTurni:
         tipo = tipo.capitalize()                                    # controlla le maiuscole
         fileturni = openpyxl.load_workbook(self.tabellone)          # file excel dei turni - es. Tabellone.xlsx
         foglio = fileturni.active                                   # individua il foglio principale
-        listaturni = []                                             # lista dipendenti
+        listaelem = []
         for colonna in foglio.iter_cols():                          # restituisce una tupla per ogni riga del tabellone
             for cella in colonna:                                   # spacchetta le celle nella riga
                 if cella.value == tipo:                             # confronta ogni cella con variabile "tipo"
                     for cella2 in colonna:
-                        if "None" not in str(cella2.value):          # filtra i valori none
-                            if tipo not in str(cella2.value):        # filtra/evita di aggiungere il valore cercato
-                                listaturni.append(cella2.value)      # aggiunge alla lista
-        return listaturni
+                        if "None" not in str(cella2.value):          # filtra i valori nulli (None)
+                            if tipo not in str(cella2.value):        # evita di aggiungere il tipo di valore cercato
+                                listaelem.append(cella2.value)       # aggiunge alla lista
+        return listaelem
 
     def lista_elementi_in_tabellone(self, dipendente):
         lista_elem = []
