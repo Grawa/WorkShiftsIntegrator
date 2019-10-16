@@ -257,9 +257,9 @@ class ManagerTurni:
                 notifica = turno_da_scrivere[0][2]
                 parcheggio = self.fileturni.verifica_parcheggio(data, turno)
                 self.dbturnimensile.scrivi_turno(data, note, notifica, parcheggio)   # scrive il turno su db
-                turni_scritti.append(f"{data}, {turno}")                                     # aggiunge i turni scritti
+                turni_scritti.append(f"{data}, {turno}")                             # aggiunge i turni scritti
             else:
-                turni_saltati.append(f"{data}, {turno}")                                     # indica eventuali turni saltati
+                turni_saltati.append(f"{data}, {turno}")                             # indica eventuali turni saltati
 
         lista_turni = []
         for data, turno in dizturni.items():
@@ -433,12 +433,14 @@ class Ui(QWidget):
 
             """)
 
-    def googledrivesync_pulsante(self):
+    @staticmethod
+    def googledrivesync_pulsante():
         QtWidgets.QMessageBox.information(window, "Info", "Avvio di Google Drive sync...\n\nNota:\n"
                                                   "Il programma potrebbe avviarsi ridotto a icona.")
         print(os.startfile(f"{os.environ['HOMEDRIVE']}\\Program Files\\Google\\Drive\\googledrivesync.exe"))
 
-    def comandi_sql_manuali_pulsante(self):
+    @staticmethod
+    def comandi_sql_manuali_pulsante():
         window2.show()
 
 
