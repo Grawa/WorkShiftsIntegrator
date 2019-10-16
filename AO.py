@@ -121,22 +121,6 @@ class Tabella:
             listaelem.append(elem_in_colonna)
         return listaelem
 
-    def note(self):
-        """ritorna una lista delle note in tabella"""
-        listaelem = []
-        for riga in self.elenca_righe():
-            elem_in_colonna = riga[1]
-            listaelem.append(elem_in_colonna)
-        return listaelem
-
-    def notifica(self):
-        """ritorna una lista dell'orario di notifica nella tabella"""
-        listaelem = []
-        for riga in self.elenca_righe():
-            elem_in_colonna = riga[2]
-            listaelem.append(elem_in_colonna)
-        return listaelem
-
     def verifica_presenza_turno_su_tabella(self, turno):                                         # (ex VerificaTurno)
         """
         verifica se presente il turno nella tabella
@@ -165,7 +149,7 @@ class DBTurni:
     def __init__(self, database):
         self.database = database
 
-    def _sqlcommand(self, comando):
+    def comando_sql(self, comando):
         """metodo interno per eseguire comandi sql custom, ritorna la risposta dal db."""
         ttdb = sqlite3.connect(self.database)         # si collega al database SQL
         ttdb_cursor = ttdb.cursor()
@@ -177,7 +161,7 @@ class DBTurni:
 
     def ottimizza_db(self):
         """ottimizza il database: elimina i vecchi turni inattivi"""
-        return self._sqlcommand("DELETE FROM reminders WHERE reminder_active='0';")
+        return self.comando_sql("DELETE FROM reminders WHERE reminder_active='0';")
 
     def scrivi_turno(self, data, note, ora_notifica, parcheggio):
         """
@@ -188,14 +172,14 @@ class DBTurni:
         :param parcheggio: Aggiunge nota su disponibilità parcheggio (es.' ! No parcheggio')
         :return: restituisce la risposta o i dati dal database
         """
-        f = self._sqlcommand(f"INSERT INTO reminders VALUES(NULL,'{note} {parcheggio}','{data} {ora_notifica}'"
+        f = self.comando_sql(f"INSERT INTO reminders VALUES(NULL,'{note} {parcheggio}','{data} {ora_notifica}'"
                              f",'1','0','0','0','0','11','','0','1','0','0','0','0','0','','0','1',"
                              f"'file:///storage/emulated/0/Ringtones/innocence.op.ogg','1','5','1','1','0');")
         return f
 
     def _leggi_date_su_db(self):
         """ legge le date dal database e restituisce una lista """
-        lista_reminder_date = self._sqlcommand("SELECT reminder_date FROM reminders")
+        lista_reminder_date = self.comando_sql("SELECT reminder_date FROM reminders")
         lista_date = []
         for elem in lista_reminder_date:
             data = elem[0]                                      # ottiene il primo elemento dalla lista_reminder_date
@@ -205,7 +189,7 @@ class DBTurni:
 
     def lista_elementi_su_db(self):
         """ legge le date dal database e restituisce una lista """
-        elem_su_db = self._sqlcommand("SELECT reminder_date,reminder_name FROM reminders")
+        elem_su_db = self.comando_sql("SELECT reminder_date,reminder_name FROM reminders")
         lista_elem = []
         for elem, elem2 in elem_su_db:
             lista_elem.append(elem + " " + elem2)
@@ -216,7 +200,7 @@ class DBTurni:
         Legge tutti i reminder presenti nel database
         :return: restituisce una lista con dentro una tupla per ogni riga
         """
-        f = self._sqlcommand(f"SELECT * FROM reminders")
+        f = self.comando_sql(f"SELECT * FROM reminders")
         return f
 
     def verifica_presenza_turno_su_db(self, data):                                    # (ex filtrodoppiturni)
@@ -238,7 +222,7 @@ class DBTurni:
         :param data: Data del turno in formato YYYY-MM-DD (es.'2019-07-24')
         :return: restituisce una lista con dentro una o piu tuple per la data richiesta(normalmente una tupla)
         """
-        f = self._sqlcommand(f'SELECT reminder_date,reminder_name FROM reminders WHERE reminder_date LIKE "%{data}%";')
+        f = self.comando_sql(f'SELECT reminder_date,reminder_name FROM reminders WHERE reminder_date LIKE "%{data}%";')
         return f
 
 
@@ -285,18 +269,6 @@ class ManagerTurni:
                 turni_saltati[data] = turno                                          # indica eventuali turni saltati
 
         return dizturni, turni_scritti, turni_saltati, errori
-
-    def inserisci_turno_singolo(self):
-        print("funzionalità non disponibile")
-        pass
-
-    def cambio_turno(self):
-        print("funzionalità non disponibile")
-        pass
-
-    def cambio_riposo(self):
-        print("funzionalità non disponibile")
-        pass
 
 
 class Ui(QWidget):
@@ -486,7 +458,7 @@ class UiComandiSql(QWidget):
     def invio_pulsante(self):
         comando = self.lineEdit.text()
         try:
-            risposta = filedb1._sqlcommand(str(comando))
+            risposta = filedb1.comando_sql(str(comando))
             self.textBrowser.setText(str(risposta))
         except:
             self.textBrowser.setText(f"COMANDO SQL NON RICONOSCIUTO.")
