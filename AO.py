@@ -54,7 +54,7 @@ class FileTurni:
         return listaelem
 
     def lista_elementi_in_tabellone(self, dipendente):
-        "crea una lista con data e turno (es. '2019-10-07, 08:30-14:30',...)"
+        """crea una lista con data e turno (es. '2019-10-07, 08:30-14:30',...)"""
         lista_elem = []
         for data, turno in self.turni_mensili(dipendente).items():
             lista_elem.append(f"{data}, {turno}")
@@ -195,14 +195,6 @@ class DBTurni:
         for elem, elem2 in elem_su_db:
             lista_elem.append(elem + " " + elem2)
         return lista_elem
-
-    def leggi_database(self):                                                                # Funzionalita aggiuntiva
-        """
-        Legge tutti i reminder presenti nel database
-        :return: restituisce una lista con dentro una tupla per ogni riga
-        """
-        f = self.comando_sql(f"SELECT * FROM reminders")
-        return f
 
     def verifica_presenza_turno_su_db(self, data):                                    # (ex filtrodoppiturni)
         """
