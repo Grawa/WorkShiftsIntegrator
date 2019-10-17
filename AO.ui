@@ -19,21 +19,21 @@
      <item row="0" column="3">
       <widget class="QLabel" name="label_8">
        <property name="text">
-        <string>Date dei turni saltati (Errori)</string>
+        <string>Turni saltati (Errori)</string>
        </property>
       </widget>
      </item>
      <item row="0" column="4">
       <widget class="QLabel" name="label_6">
        <property name="text">
-        <string>Date dei turni non in lista (Errori)</string>
+        <string>Turni non in lista (Errori)</string>
        </property>
       </widget>
      </item>
      <item row="0" column="2">
       <widget class="QLabel" name="label_9">
        <property name="text">
-        <string>Date dei turni inseriti</string>
+        <string>Turni inseriti</string>
        </property>
       </widget>
      </item>
@@ -43,7 +43,7 @@
      <item row="0" column="1">
       <widget class="QLabel" name="label_10">
        <property name="text">
-        <string>Date dei turni trovati</string>
+        <string>Turni trovati</string>
        </property>
       </widget>
      </item>
@@ -232,6 +232,12 @@
        </property>
        <item>
         <widget class="QLabel" name="label">
+         <property name="font">
+          <font>
+           <weight>50</weight>
+           <bold>false</bold>
+          </font>
+         </property>
          <property name="text">
           <string>Database:</string>
          </property>
@@ -246,12 +252,18 @@
           </sizepolicy>
          </property>
          <property name="text">
-          <string>Seleziona...</string>
+          <string>Inizia...</string>
          </property>
         </widget>
        </item>
        <item>
         <widget class="QLabel" name="label_2">
+         <property name="font">
+          <font>
+           <weight>50</weight>
+           <bold>false</bold>
+          </font>
+         </property>
          <property name="text">
           <string>Tabellone:</string>
          </property>
@@ -300,6 +312,12 @@
      </item>
      <item row="3" column="2">
       <widget class="QLabel" name="label_3">
+       <property name="font">
+        <font>
+         <weight>50</weight>
+         <bold>false</bold>
+        </font>
+       </property>
        <property name="text">
         <string>Dipendente:</string>
        </property>
@@ -335,8 +353,8 @@
          </property>
          <property name="font">
           <font>
-           <weight>75</weight>
-           <bold>true</bold>
+           <weight>50</weight>
+           <bold>false</bold>
           </font>
          </property>
          <property name="text">
@@ -491,7 +509,7 @@
    <slot>aggiorna_gui_turni()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>977</x>
+     <x>1065</x>
      <y>42</y>
     </hint>
     <hint type="destinationlabel">
@@ -539,8 +557,8 @@
    <slot>ricarica_tabella()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>446</x>
-     <y>106</y>
+     <x>521</x>
+     <y>109</y>
     </hint>
     <hint type="destinationlabel">
      <x>495</x>
@@ -587,8 +605,8 @@
    <slot>comandi_sql_manuali_pulsante()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>488</x>
-     <y>736</y>
+     <x>216</x>
+     <y>745</y>
     </hint>
     <hint type="destinationlabel">
      <x>459</x>

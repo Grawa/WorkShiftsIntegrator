@@ -286,6 +286,7 @@ class Ui(QWidget):
             self.pushButton_drivesync.setText("Google Drive sync non disponibile")
             self.pushButton_drivesync.setEnabled(False)
 
+
     def ricarica_tabella(self):
         try:
             global filetabella1
@@ -332,8 +333,11 @@ class Ui(QWidget):
                                                             ' o dipendente non trovato!')
 
     def carica_database(self):
+        QtWidgets.QMessageBox.information(window, "Info", "Esegui il backup del database dall'app Timetune...\n\n"
+                                                          "Premi OK per selezionare il database")
         try:
-            perc_filedb, _ = QtWidgets.QFileDialog.getOpenFileName(self, 'Seleziona file...', QtCore.QDir.rootPath(),
+            perc_filedb, _ = QtWidgets.QFileDialog.getOpenFileName(self, 'Seleziona file...',
+                                                                   QtCore.QDir.rootPath(),
                                                                    "Database files (*.db);ALL files (*.*)")
             global filedb1
             filedb1 = DBTurni(perc_filedb)
@@ -364,7 +368,8 @@ class Ui(QWidget):
             self.listWidget_5.addItems(turni_saltati)
             self.listWidget_4.addItems(errori)
             if len(errori) == 0 and len(turni_saltati) == 0:
-                QtWidgets.QMessageBox.information(window, "Info", "Operazione eseguita con successo!")
+                QtWidgets.QMessageBox.information(window, "Info", "Operazione eseguita con successo!\n\n"
+                                                                  "Ripristina ora il backup sull'app Timetune...")
             else:
                 QtWidgets.QMessageBox.warning(window, "Info", "Operazione eseguita con errori!")
         except:
@@ -470,6 +475,9 @@ class UiComandiSql(QWidget):
     def cerca_pulsante(self):
         self.lineEdit.setText("SELECT * FROM reminders WHERE reminder_date LIKE ' '")
 
+# class UiProceduraGuidata:
+#     uic.loadUi()
+
 
 if __name__ == "__main__":
     app = QApplication([])
@@ -477,5 +485,4 @@ if __name__ == "__main__":
     window2 = UiComandiSql()
     window.show()
     app.exec()
-
 
