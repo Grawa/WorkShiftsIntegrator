@@ -7,7 +7,7 @@ from PyQt5.QtWidgets import QApplication, QWidget,QHeaderView
 from PyQt5 import uic, QtWidgets, QtCore
 import os
 import time
-
+import subprocess
 
 class FileTurni:
     """gestisce le operazioni dal file turni, prende in input il percorso del file turni .xlsx"""
@@ -285,7 +285,15 @@ class Ui(QWidget):
         if not os.path.exists(f"{os.environ['HOMEDRIVE']}\\Program Files\\Google\\Drive\\googledrivesync.exe"):
             self.pushButton_drivesync.setText("Google Drive sync non disponibile")
             self.pushButton_drivesync.setEnabled(False)
+        self._google_drive_run_check()  # controlla se avviato e imposta testo pulsante (setText nel metodo)
 
+    def _google_drive_run_check(self):
+        listatask = subprocess.check_output("tasklist")
+        gdriveisrunning = "googledrivesync.exe" in str(listatask)
+        if gdriveisrunning is True:
+            self.pushButton_drivesync.setText("Google Drive sync già avviato!")
+            self.pushButton_drivesync.setEnabled(False)
+        return gdriveisrunning
 
     def ricarica_tabella(self):
         try:
@@ -346,6 +354,7 @@ class Ui(QWidget):
             self.pushButton_4.setEnabled(True)  # abilita tasto aggiorna per db
             self.pushButton_2.setEnabled(True)  # abilita tasto per selezionare db
             self.pushButton_9.setEnabled(True)  # abilita tasto per selezionare comandi sql manuali
+            self._google_drive_run_check()
         except:
             QtWidgets.QMessageBox.warning(window, "Errore", "File vuoto o non riconosciuto!")
 
@@ -368,8 +377,15 @@ class Ui(QWidget):
             self.listWidget_5.addItems(turni_saltati)
             self.listWidget_4.addItems(errori)
             if len(errori) == 0 and len(turni_saltati) == 0:
-                QtWidgets.QMessageBox.information(window, "Info", "Operazione eseguita con successo!\n\n"
-                                                                  "Ripristina ora il backup sull'app Timetune...")
+                if not self._google_drive_run_check():
+                    QtWidgets.QMessageBox.information(window, "Info", "Operazione eseguita con successo!\n\n"
+                                                              "Ripristina ora il backup sull'app Timetune...\n\n\n"
+                                                              "Nota: Google drive sync non avviato:\n"
+                                                              "Puoi avviarlo premendo 'Avvia Google Drive sync'.")
+                else:
+                    QtWidgets.QMessageBox.information(window, "Info", "Operazione eseguita con successo!\n\n"
+                                                              "Ripristina ora il backup sull'app Timetune...")
+
             else:
                 QtWidgets.QMessageBox.warning(window, "Info", "Operazione eseguita con errori!")
         except:
@@ -440,9 +456,13 @@ class Ui(QWidget):
 
     @staticmethod
     def googledrivesync_pulsante():
+        os.startfile(f"{os.environ['HOMEDRIVE']}\\Program Files\\Google\\Drive\\googledrivesync.exe")
         QtWidgets.QMessageBox.information(window, "Info", "Avvio di Google Drive sync...\n\nNota:\n"
                                                   "Il programma potrebbe avviarsi ridotto a icona.")
-        print(os.startfile(f"{os.environ['HOMEDRIVE']}\\Program Files\\Google\\Drive\\googledrivesync.exe"))
+
+
+
+
 
     @staticmethod
     def comandi_sql_manuali_pulsante():
@@ -474,10 +494,6 @@ class UiComandiSql(QWidget):
 
     def cerca_pulsante(self):
         self.lineEdit.setText("SELECT * FROM reminders WHERE reminder_date LIKE ' '")
-
-# class UiProceduraGuidata:
-#     uic.loadUi()
-
 
 if __name__ == "__main__":
     app = QApplication([])
