@@ -415,20 +415,19 @@ class Ui(QWidget):
         Descrizione:
         Il programma legge i turni da un file excel
         e li scrive su un database ripristinabile sull'app 
-        di terze parti TimeTune.
+        (di terze parti) TimeTune.
 
         Viene impostato un reminder per ogni turno trovato
         con notifica e note in base ai dati presenti nella Tabella.
 
         Il sistema inoltre aggiunge automaticamente alle note l'eventuale 
-        mancanza di parcheggio in caso di pulizie stradali.
-        Trigger: Secondo lunedì del mese con inizio turno entro le 11:00
+        mancanza di parcheggio in caso di pulizie stradali
+        (Secondo lunedì del mese con inizio turno entro le 11:00)
         
-        Versione:
-        1.0
-        Il programma viene fornito senza alcuna garanzia
-        Open Source e fa uso delle librerie Qt e dell'app di 
-        terze parti TimeTune per Android.
+        Versione: 1.0
+        Il programma viene fornito senza alcuna garanzia di funzionamento,
+        è Open Source e fa uso delle librerie Qt e delle app di 
+        terze parti TimeTune per Android e Google drive.
         
         (c) 2019 Graziano Porcu
         https://github.com/Grawa
@@ -440,7 +439,7 @@ class Ui(QWidget):
         QtWidgets.QMessageBox.information(window, "Info", """
                                                         Guida:
         
-        1) Fare il backup del database da cellulare (consigliato su Google Drive)...
+        1) Fare il backup del database da cellulare (consigliato su Google Drive*)...
             (app TimeTune>Impostazioni>Backup)
            
            
@@ -455,10 +454,12 @@ class Ui(QWidget):
         3) Ripristinare il database sul cellulare...
             (app TimeTune>Impostazioni>Backup)
             
-            Nota: In caso di backup su Google Drive, da pc accertarsi
+            Nota: In caso di backup su Google Drive*, da pc accertarsi
             che il backup sia stato caricato correttamente da pc e sul
             cellulare di scaricare la copia aggiornata del file.
 
+
+        *Integrazione con google drive sync disponibile solo per PC windows.
             """)
 
     @staticmethod
