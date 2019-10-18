@@ -9,6 +9,7 @@ import os
 import time
 import subprocess
 
+
 class FileTurni:
     """gestisce le operazioni dal file turni, prende in input il percorso del file turni .xlsx"""
     def __init__(self, tabellone):
@@ -486,18 +487,26 @@ class UiComandiSql(QWidget):
         comando = self.lineEdit.text()
         try:
             risposta = filedb1.comando_sql(str(comando))
-            self.textBrowser.setText(str(risposta))
-        except:
+            print(any(risposta))
+            if not any(risposta):
+                self.textBrowser.setText("COMANDO SQL INVIATO (nessuna risposta dal database)")
+            else:
+                self.textBrowser.setText(str(risposta))
+        except ValueError:
             self.textBrowser.setText(f"COMANDO SQL NON RICONOSCIUTO.")
 
     def elimina_pulsante(self):
         self.lineEdit.setText("DELETE FROM reminders WHERE _id=' ' ")
+
+    def eliminatutti_pulsante(self):
+        self.lineEdit.setText("DELETE FROM reminders ")
 
     def seleziona_pulsante(self):
         self.lineEdit.setText("SELECT * FROM reminders")
 
     def cerca_pulsante(self):
         self.lineEdit.setText("SELECT * FROM reminders WHERE reminder_date LIKE ' '")
+
 
 if __name__ == "__main__":
     app = QApplication([])

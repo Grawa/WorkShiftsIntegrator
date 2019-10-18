@@ -48,31 +48,38 @@
        <property name="topMargin">
         <number>0</number>
        </property>
-       <item row="0" column="0">
-        <widget class="QLabel" name="label_2">
+       <item row="1" column="2">
+        <widget class="QPushButton" name="pushButton_seleziona">
          <property name="text">
-          <string>Comandi rapidi:</string>
+          <string>Mostra tutto il contenuto...</string>
          </property>
         </widget>
        </item>
        <item row="1" column="1">
-        <widget class="QPushButton" name="pushButton_seleziona">
-         <property name="text">
-          <string>Seleziona...</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="0">
-        <widget class="QPushButton" name="pushButton_cancella">
+        <widget class="QPushButton" name="pushButton_elimina">
          <property name="text">
           <string>Elimina reminder...</string>
          </property>
         </widget>
        </item>
-       <item row="1" column="2">
+       <item row="1" column="3">
         <widget class="QPushButton" name="pushButton_cerca">
          <property name="text">
-          <string>Cerca...</string>
+          <string>Cerca per data...</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QPushButton" name="pushButton_eliminatutti">
+         <property name="text">
+          <string>Elimina tutti i reminder</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="0">
+        <widget class="QLabel" name="label_2">
+         <property name="text">
+          <string>Comandi rapidi:</string>
          </property>
         </widget>
        </item>
@@ -108,14 +115,14 @@
    </hints>
   </connection>
   <connection>
-   <sender>pushButton_cancella</sender>
+   <sender>pushButton_elimina</sender>
    <signal>clicked()</signal>
    <receiver>Form</receiver>
    <slot>elimina_pulsante()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>163</x>
-     <y>302</y>
+     <x>364</x>
+     <y>313</y>
     </hint>
     <hint type="destinationlabel">
      <x>174</x>
@@ -130,8 +137,8 @@
    <slot>seleziona_pulsante()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>263</x>
-     <y>303</y>
+     <x>575</x>
+     <y>313</y>
     </hint>
     <hint type="destinationlabel">
      <x>338</x>
@@ -155,6 +162,22 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>pushButton_eliminatutti</sender>
+   <signal>clicked()</signal>
+   <receiver>Form</receiver>
+   <slot>eliminatutti_pulsante()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>150</x>
+     <y>297</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>33</x>
+     <y>317</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>invio_pulsante()</slot>
@@ -162,5 +185,6 @@
   <slot>seleziona_pulsante()</slot>
   <slot>cerca_pulsante()</slot>
   <slot>inserisci_pulsante()</slot>
+  <slot>eliminatutti_pulsante()</slot>
  </slots>
 </ui>
