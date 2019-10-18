@@ -273,9 +273,9 @@ class Ui(QWidget):
     def __init__(self):
         super().__init__()
         try:
-            uic.loadUi("AO.ui", self)
+            uic.loadUi("AO_files\\AO.ui", self)
         except FileNotFoundError:
-            print("Errore: File AO.ui non trovato")
+            print("Errore: File AO_files\\AO.ui non trovato")
             time.sleep(5)
         self.comboBox.activated[str].connect(self.cambio_nome_dip_combobox)  # collega le variazioni della combobox...
         self.ricarica_tabella()
@@ -299,7 +299,7 @@ class Ui(QWidget):
     def ricarica_tabella(self):
         try:
             global filetabella1
-            filetabella1 = Tabella("tabella.csv")
+            filetabella1 = Tabella("AO_files\\tabella.csv")
             self.tableWidget.clear()
             for indice, elem in enumerate(filetabella1.elenca_righe()):  # imposta il numero di righe della tabella
                 self.tableWidget.setRowCount(indice + 1)  # aggiunge una riga (fix per mostrare tutti i contenuti)
@@ -314,7 +314,7 @@ class Ui(QWidget):
             self.tableWidget.horizontalHeader().setSectionResizeMode(
                 QHeaderView.Stretch)  # adatta tab.turni alla finestra
         except:
-            print("Errore: File Tabella.csv non trovato")
+            print("Errore: File AO_files\\tabella.csv non trovato")
             time.sleep(5)
 
     def carica_tabellone(self):
@@ -478,16 +478,15 @@ class UiComandiSql(QWidget):
     def __init__(self):
         super().__init__()
         try:
-            uic.loadUi("CSQL.ui", self)
+            uic.loadUi("AO_files\\CSQL.ui", self)
         except FileNotFoundError:
-            print("Errore: File CSQL.ui non trovato")
+            print("Errore: File AO_files\\CSQL.ui non trovato")
             time.sleep(5)
 
     def invio_pulsante(self):
         comando = self.lineEdit.text()
         try:
             risposta = filedb1.comando_sql(str(comando))
-            print(any(risposta))
             if not any(risposta):
                 self.textBrowser.setText("COMANDO SQL INVIATO (nessuna risposta dal database)")
             else:
