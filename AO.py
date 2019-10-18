@@ -492,7 +492,7 @@ class UiComandiSql(QWidget):
                 self.textBrowser.setText("COMANDO SQL INVIATO (nessuna risposta dal database)")
             else:
                 self.textBrowser.setText(str(risposta))
-        except ValueError:
+        except:
             self.textBrowser.setText(f"COMANDO SQL NON RICONOSCIUTO.")
 
     def elimina_pulsante(self):
