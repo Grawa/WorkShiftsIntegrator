@@ -273,7 +273,7 @@ class Ui(QWidget):
         super().__init__()
         try:
             uic.loadUi("AO.ui", self)
-        except:
+        except FileNotFoundError:
             print("Errore: File AO.ui non trovato")
             time.sleep(5)
         self.comboBox.activated[str].connect(self.cambio_nome_dip_combobox)  # collega le variazioni della combobox...
@@ -377,14 +377,21 @@ class Ui(QWidget):
             self.listWidget_5.addItems(turni_saltati)
             self.listWidget_4.addItems(errori)
             if len(errori) == 0 and len(turni_saltati) == 0:
-                if not self._google_drive_run_check():
-                    QtWidgets.QMessageBox.information(window, "Info", "Operazione eseguita con successo!\n\n"
-                                                              "Ripristina ora il backup sull'app Timetune...\n\n\n"
-                                                              "Nota: Google drive sync non avviato:\n"
-                                                              "Puoi avviarlo premendo 'Avvia Google Drive sync'.")
+                if os.path.exists(f"{os.environ['HOMEDRIVE']}\\Program Files\\Google\\Drive\\googledrivesync.exe"):
+                    if not self._google_drive_run_check():  # controlla, se google drive non è avviato
+                        QtWidgets.QMessageBox.information(window, "Info", "Operazione eseguita con successo.\n\n"
+                                                                          "Ripristina ora il backup sull'app Timetune!"
+                                                                          "\n\n\n"
+                                                                          "Nota: Google drive sync non avviato:\n"
+                                                                          "Avvialo se vuoi utilizzarlo per "
+                                                                          "sincronizzare i backup...")
+                    else:
+                        QtWidgets.QMessageBox.information(window, "Info", "Operazione eseguita con successo.\n\n"
+                                                                          "Ripristina ora il backup sull'app Timetune!")
+
                 else:
-                    QtWidgets.QMessageBox.information(window, "Info", "Operazione eseguita con successo!\n\n"
-                                                              "Ripristina ora il backup sull'app Timetune...")
+                    QtWidgets.QMessageBox.information(window, "Info", "Operazione eseguita con successo.\n\n"
+                                                              "Ripristina ora il backup sull'app Timetune!")
 
             else:
                 QtWidgets.QMessageBox.warning(window, "Info", "Operazione eseguita con errori!")
@@ -459,10 +466,6 @@ class Ui(QWidget):
         os.startfile(f"{os.environ['HOMEDRIVE']}\\Program Files\\Google\\Drive\\googledrivesync.exe")
         QtWidgets.QMessageBox.information(window, "Info", "Avvio di Google Drive sync...\n\nNota:\n"
                                                   "Il programma potrebbe avviarsi ridotto a icona.")
-
-
-
-
 
     @staticmethod
     def comandi_sql_manuali_pulsante():
