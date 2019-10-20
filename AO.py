@@ -563,8 +563,6 @@ class UiComandiSql(QWidget):
         self.lineEdit.setText("SELECT * FROM reminders WHERE reminder_date LIKE ' '")
 
 
-
-
 class UiEliminaVecchiDB(QWidget):
     def __init__(self):
         super().__init__()
@@ -579,8 +577,6 @@ class UiEliminaVecchiDB(QWidget):
         lista_file_da_elim = DBTurni.verif_file_da_rimuovere(perc_filedb_fixed)  # Verifica se ci sono file da rimuovere
         self.lista_file_da_elim = lista_file_da_elim
 
-        print("lista", lista_file_da_elim)
-        print(perc_filedb_fixed)
         if lista_file_da_elim:
             self.listWidget.clear()
             self.listWidget.addItems(lista_file_da_elim)  # Aggiunge la lista dei file al listWidget
