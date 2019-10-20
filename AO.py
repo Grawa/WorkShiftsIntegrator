@@ -601,14 +601,6 @@ class UiEliminaVecchiDB(QWidget):
             self.close()
 
 
-
-
-
-# print(UiEliminaVecchiDB("C:/Users/USER/Google Drive/TimeTuneFolder/TimeTune Backup (2019-10-01 124721) (ONEPLUS A6010) - Co"))
-
-
-
-
 if __name__ == "__main__":
     app = QApplication([])
     window = Ui()
