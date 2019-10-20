@@ -8,6 +8,7 @@ from PyQt5 import uic, QtWidgets, QtCore
 import os
 import time
 import subprocess
+import glob
 
 
 class FileTurni:
@@ -219,6 +220,52 @@ class DBTurni:
         f = self.comando_sql(f'SELECT reminder_date,reminder_name FROM reminders WHERE reminder_date LIKE "%{data}%";')
         return f
 
+    @staticmethod
+    def verif_file_da_rimuovere(perc_filedb):
+        """
+        verifica se ci sono vecchi file database nella stessa directory del file indicato
+        :param perc_filedb: percorso del file database
+        :return: Ritorna una lista vuota se non ci sono file vecchi altrimenti una lista di essi
+        """
+        # ELENCA TUTTI I FILE NELLA DIRECTORY DEL FILE SELEZIONATO
+        directory = os.path.dirname(perc_filedb)                # seleziona la directory del file selezionato
+        listafiledir = glob.glob(directory + "\\*")             # elenca in una lista i file presenti nella directory
+
+        # ELENCA SOLO I FILE CONTENENTI LA PAROLA CHIAVE "TimeTune Backup" E CHE NON HANNO ESTENSIONE es(.txt)
+        filestt = []
+        for filex in listafiledir:
+            if "TimeTune Backup" in filex:
+                if not os.path.splitext(filex)[1]:      # controlla che il file non abbia una estensione
+                    filestt.append(filex)
+
+        # CERCA IL FILE PIU RECENTE E LO ESCLUDE.. ELENCA TUTTI GLI ALTRI FILE MENO RECENTI
+        file_vecchi = []
+        file_nuovo = max(filestt, key=os.path.getctime)  # restituisce il piu recente
+        for file in filestt:                             # rimuove i vecchi file
+            if file != file_nuovo:                       # tranne quello piu recente
+                file_vecchi.append(file)
+
+        if file_vecchi:
+            return file_vecchi
+        else:
+            return []
+
+    @staticmethod
+    def verif_file_da_selezionare(directory):
+
+        # ELENCA TUTTI I FILE NELLA DIRECTORY DEL FILE SELEZIONATO
+        listafiledir = glob.glob(directory + "//*")             # elenca in una lista i file presenti nella directory
+
+        # ELENCA SOLO I FILE CONTENENTI LA PAROLA CHIAVE "TimeTune Backup" E CHE NON HANNO ESTENSIONE es(.txt)
+        filestt = []
+        for filex in listafiledir:
+            if "TimeTune Backup" in filex:
+                if not os.path.splitext(filex)[1]:      # controlla che il file non abbia una estensione
+                    filestt.append(filex)
+
+        # CERCA IL FILE PIU RECENTE
+        file_nuovo = max(filestt, key=os.path.getctime)  # restituisce il piu recente
+        return file_nuovo
 
 class ManagerTurni:
     """
@@ -329,7 +376,7 @@ class Ui(QWidget):
 
             self.pushButton_3.setEnabled(True)  # abilita tasto inserisci turni su db
         except:
-            QtWidgets.QMessageBox.warning(window, "Errore", "File vuoto o non riconosciuto!")
+            QtWidgets.QMessageBox.warning(window, "Errore", "Nessuna cartella selezionata o file non riconosciuto!")
 
     def cambio_nome_dip_combobox(self, nome_dip):
         try:
@@ -345,17 +392,26 @@ class Ui(QWidget):
         QtWidgets.QMessageBox.information(window, "Info", "Esegui il backup del database dall'app Timetune...\n\n"
                                                           "Premi OK per selezionare il database")
         try:
-            perc_filedb, _ = QtWidgets.QFileDialog.getOpenFileName(self, 'Seleziona file...',
-                                                                   QtCore.QDir.rootPath(),
-                                                                   "Database files (*.db);ALL files (*.*)")
+            global perc_filedb_fixed
+            perc_cart_filedb = QtWidgets.QFileDialog.getExistingDirectory(window, 'Seleziona cartella...')
+            perc_filedb = DBTurni.verif_file_da_selezionare(perc_cart_filedb)
+            perc_filedb_fixed = perc_filedb.replace('\\', '/')
+
+
             global filedb1
-            filedb1 = DBTurni(perc_filedb)
+            filedb1 = DBTurni(str(perc_filedb_fixed))
+            self.listWidget_3.clear()
             self.listWidget_3.addItems(filedb1.lista_elementi_su_db())
             self.pushButton.setText("Cambia...")
             self.pushButton_4.setEnabled(True)  # abilita tasto aggiorna per db
             self.pushButton_2.setEnabled(True)  # abilita tasto per selezionare db
             self.pushButton_9.setEnabled(True)  # abilita tasto per selezionare comandi sql manuali
             self._google_drive_run_check()
+            print(perc_filedb_fixed)
+
+            if window3.updatee():  # aggiorna la finestra e se ci sono file file da rimuovere la mostra
+                window3.show()
+
         except:
             QtWidgets.QMessageBox.warning(window, "Errore", "File vuoto o non riconosciuto!")
 
@@ -507,10 +563,57 @@ class UiComandiSql(QWidget):
         self.lineEdit.setText("SELECT * FROM reminders WHERE reminder_date LIKE ' '")
 
 
+
+
+class UiEliminaVecchiDB(QWidget):
+    def __init__(self):
+        super().__init__()
+        try:
+            uic.loadUi("Ui3.ui", self)
+        except:
+            print("Errore: Ui3.ui non trovato")
+            time.sleep(5)
+
+    def updatee(self):
+        """aggiorna la finestra creata inizialmente e Controlla se ci sono file da eliminare:ritorna True/False """
+        lista_file_da_elim = DBTurni.verif_file_da_rimuovere(perc_filedb_fixed)  # Verifica se ci sono file da rimuovere
+        self.lista_file_da_elim = lista_file_da_elim
+
+        print("lista", lista_file_da_elim)
+        print(perc_filedb_fixed)
+        if lista_file_da_elim:
+            self.listWidget.clear()
+            self.listWidget.addItems(lista_file_da_elim)  # Aggiunge la lista dei file al listWidget
+
+        if lista_file_da_elim:  # se ci sono file da eliminare ritorna True
+            return True
+        else:
+            return False
+
+    def mantieni_files(self):  # pulsante NO
+        self.updatee()
+        self.close()
+
+    def elimina_files(self):  # pulsante Elimina
+        for file in self.lista_file_da_elim:
+            os.remove(file)
+            self.updatee()
+            self.close()
+
+
+
+
+
+# print(UiEliminaVecchiDB("C:/Users/USER/Google Drive/TimeTuneFolder/TimeTune Backup (2019-10-01 124721) (ONEPLUS A6010) - Co"))
+
+
+
+
 if __name__ == "__main__":
     app = QApplication([])
     window = Ui()
     window2 = UiComandiSql()
+    window3 = UiEliminaVecchiDB()
     window.show()
     app.exec()
 

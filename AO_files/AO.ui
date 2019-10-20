@@ -252,7 +252,7 @@
           </sizepolicy>
          </property>
          <property name="text">
-          <string>Inizia...</string>
+          <string>Seleziona cartella...</string>
          </property>
         </widget>
        </item>
@@ -278,7 +278,7 @@
           </sizepolicy>
          </property>
          <property name="text">
-          <string>Seleziona...</string>
+          <string>Seleziona file...</string>
          </property>
         </widget>
        </item>
