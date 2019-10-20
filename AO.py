@@ -267,6 +267,7 @@ class DBTurni:
         file_nuovo = max(filestt, key=os.path.getctime)  # restituisce il piu recente
         return file_nuovo
 
+
 class ManagerTurni:
     """
     gestisce le operazioni sui turni (li inserisce su db,esegue i cambi turno e altre funzioni di alto livello)
@@ -397,7 +398,6 @@ class Ui(QWidget):
             perc_filedb = DBTurni.verif_file_da_selezionare(perc_cart_filedb)
             perc_filedb_fixed = perc_filedb.replace('\\', '/')
 
-
             global filedb1
             filedb1 = DBTurni(str(perc_filedb_fixed))
             self.listWidget_3.clear()
@@ -460,7 +460,8 @@ class Ui(QWidget):
         self.listWidget_3.addItems(filedb1.lista_elementi_su_db())
         self.listWidget_3.sortItems()
 
-    def modifica_tabella_pulsante(self):
+    @staticmethod
+    def modifica_tabella_pulsante():
         try:
             os.startfile(os.getcwd() + "\\Tabella.csv")
         except:
@@ -566,22 +567,22 @@ class UiComandiSql(QWidget):
 class UiEliminaVecchiDB(QWidget):
     def __init__(self):
         super().__init__()
+        self.lista_file_da_elim = None
         try:
             uic.loadUi("Ui3.ui", self)
-        except:
+        except FileNotFoundError:
             print("Errore: Ui3.ui non trovato")
             time.sleep(5)
 
     def updatee(self):
         """aggiorna la finestra creata inizialmente e Controlla se ci sono file da eliminare:ritorna True/False """
-        lista_file_da_elim = DBTurni.verif_file_da_rimuovere(perc_filedb_fixed)  # Verifica se ci sono file da rimuovere
-        self.lista_file_da_elim = lista_file_da_elim
 
-        if lista_file_da_elim:
+        self.lista_file_da_elim = DBTurni.verif_file_da_rimuovere(perc_filedb_fixed)  # Verif.se ci sono file da rimuov.
+        if self.lista_file_da_elim:
             self.listWidget.clear()
-            self.listWidget.addItems(lista_file_da_elim)  # Aggiunge la lista dei file al listWidget
+            self.listWidget.addItems(self.lista_file_da_elim)  # Aggiunge la lista dei file al listWidget
 
-        if lista_file_da_elim:  # se ci sono file da eliminare ritorna True
+        if self.lista_file_da_elim:  # se ci sono file da eliminare ritorna True
             return True
         else:
             return False
