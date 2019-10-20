@@ -234,7 +234,7 @@ class DBTurni:
         # ELENCA SOLO I FILE (no cartelle) CONTENENTI "TimeTune Backup" E CHE NON HANNO ESTENSIONE es(.txt)
         filestt = []
         for filex in listafiledir:
-            if os.path.isfile(filex):    # controlla che siano file e non cartelle               # todo tabella.csv non trovato
+            if os.path.isfile(filex):    # controlla che siano file e non cartelle
                 if "TimeTune Backup" in filex:  # controlla che ci sia "TimeTune Backup"
                     if not os.path.splitext(filex)[1]:      # controlla che il file non abbia una estensione
                         filestt.append(filex)
@@ -465,9 +465,9 @@ class Ui(QWidget):
     @staticmethod
     def modifica_tabella_pulsante():
         try:
-            os.startfile(os.getcwd() + "\\Tabella.csv")
+            os.startfile("AO_files\\Tabella.csv")
         except:
-            QtWidgets.QMessageBox.warning(window, "Errore", "File Tabella.csv non trovato")
+            QtWidgets.QMessageBox.warning(window, "Errore", 'File "AO_files\\Tabella.csv" non trovato')
 
     @staticmethod
     def info_pulsante():
