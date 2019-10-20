@@ -231,12 +231,13 @@ class DBTurni:
         directory = os.path.dirname(perc_filedb)                # seleziona la directory del file selezionato
         listafiledir = glob.glob(directory + "\\*")             # elenca in una lista i file presenti nella directory
 
-        # ELENCA SOLO I FILE CONTENENTI LA PAROLA CHIAVE "TimeTune Backup" E CHE NON HANNO ESTENSIONE es(.txt)
+        # ELENCA SOLO I FILE (no cartelle) CONTENENTI "TimeTune Backup" E CHE NON HANNO ESTENSIONE es(.txt)
         filestt = []
         for filex in listafiledir:
-            if "TimeTune Backup" in filex:
-                if not os.path.splitext(filex)[1]:      # controlla che il file non abbia una estensione
-                    filestt.append(filex)
+            if os.path.isfile(filex):    # controlla che siano file e non cartelle               # todo tabella.csv non trovato
+                if "TimeTune Backup" in filex:  # controlla che ci sia "TimeTune Backup"
+                    if not os.path.splitext(filex)[1]:      # controlla che il file non abbia una estensione
+                        filestt.append(filex)
 
         # CERCA IL FILE PIU RECENTE E LO ESCLUDE.. ELENCA TUTTI GLI ALTRI FILE MENO RECENTI
         file_vecchi = []
@@ -256,12 +257,13 @@ class DBTurni:
         # ELENCA TUTTI I FILE NELLA DIRECTORY DEL FILE SELEZIONATO
         listafiledir = glob.glob(directory + "//*")             # elenca in una lista i file presenti nella directory
 
-        # ELENCA SOLO I FILE CONTENENTI LA PAROLA CHIAVE "TimeTune Backup" E CHE NON HANNO ESTENSIONE es(.txt)
+        # ELENCA SOLO I FILE (no cartelle) CONTENENTI "TimeTune Backup" E CHE NON HANNO ESTENSIONE es(.txt)
         filestt = []
         for filex in listafiledir:
-            if "TimeTune Backup" in filex:
-                if not os.path.splitext(filex)[1]:      # controlla che il file non abbia una estensione
-                    filestt.append(filex)
+            if os.path.isfile(filex):  # controlla che siano file e non cartelle
+                if "TimeTune Backup" in filex:  # controlla che ci sia "TimeTune Backup"
+                    if not os.path.splitext(filex)[1]:      # controlla che il file non abbia una estensione
+                        filestt.append(filex)
 
         # CERCA IL FILE PIU RECENTE
         file_nuovo = max(filestt, key=os.path.getctime)  # restituisce il piu recente
@@ -347,7 +349,7 @@ class Ui(QWidget):
     def ricarica_tabella(self):
         try:
             global filetabella1
-            filetabella1 = Tabella("AO_files\\tabella.csv")
+            filetabella1 = Tabella("AO_files\\Tabella.csv")
             self.tableWidget.clear()
             for indice, elem in enumerate(filetabella1.elenca_righe()):  # imposta il numero di righe della tabella
                 self.tableWidget.setRowCount(indice + 1)  # aggiunge una riga (fix per mostrare tutti i contenuti)
@@ -362,7 +364,7 @@ class Ui(QWidget):
             self.tableWidget.horizontalHeader().setSectionResizeMode(
                 QHeaderView.Stretch)  # adatta tab.turni alla finestra
         except:
-            print("Errore: File AO_files\\tabella.csv non trovato")
+            print("Errore: File AO_files\\Tabella.csv non trovato")
             time.sleep(5)
 
     def carica_tabellone(self):
@@ -409,7 +411,7 @@ class Ui(QWidget):
             self._google_drive_run_check()
             print(perc_filedb_fixed)
 
-            if window3.updatee():  # aggiorna la finestra e se ci sono file file da rimuovere la mostra
+            if window3.aggiorna_finestra():  # aggiorna la finestra e se ci sono file file da rimuovere la mostra
                 window3.show()
 
         except:
@@ -574,27 +576,28 @@ class UiEliminaVecchiDB(QWidget):
             print("Errore: Ui3.ui non trovato")
             time.sleep(5)
 
-    def updatee(self):
-        """aggiorna la finestra creata inizialmente e Controlla se ci sono file da eliminare:ritorna True/False """
+    def aggiorna_finestra(self):
+        """
+        aggiorna la lista di file da eliminare
+        :return: Controlla se ci sono file da eliminare ritorna True altrimenti False """
 
-        self.lista_file_da_elim = DBTurni.verif_file_da_rimuovere(perc_filedb_fixed)  # Verif.se ci sono file da rimuov.
-        if self.lista_file_da_elim:
-            self.listWidget.clear()
-            self.listWidget.addItems(self.lista_file_da_elim)  # Aggiunge la lista dei file al listWidget
+        self.lista_file_da_elim = DBTurni.verif_file_da_rimuovere(perc_filedb_fixed)  # Verif.se ci sono file da elim.
+        self.listWidget.clear()
+        self.listWidget.addItems(self.lista_file_da_elim)  # Aggiunge la lista dei file al listWidget
 
-        if self.lista_file_da_elim:  # se ci sono file da eliminare ritorna True
+        if self.lista_file_da_elim:  # ritorna True se ci sono file da eliminare altrimenti False
             return True
         else:
             return False
 
     def mantieni_files(self):  # pulsante NO
-        self.updatee()
+        self.aggiorna_finestra()
         self.close()
 
     def elimina_files(self):  # pulsante Elimina
         for file in self.lista_file_da_elim:
             os.remove(file)
-            self.updatee()
+            self.aggiorna_finestra()
             self.close()
 
 
