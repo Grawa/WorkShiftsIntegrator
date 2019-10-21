@@ -363,7 +363,7 @@ class Ui(QWidget):
             self.tableWidget.resizeRowsToContents()  # resize delle righe tab.turni
             self.tableWidget.horizontalHeader().setSectionResizeMode(
                 QHeaderView.Stretch)  # adatta tab.turni alla finestra
-        except:
+        except FileNotFoundError:
             print("Errore: File AO_files\\Tabella.csv non trovato")
             time.sleep(5)
 
@@ -466,7 +466,7 @@ class Ui(QWidget):
     def modifica_tabella_pulsante():
         try:
             os.startfile("AO_files\\Tabella.csv")
-        except:
+        except FileNotFoundError:
             QtWidgets.QMessageBox.warning(window, "Errore", 'File "AO_files\\Tabella.csv" non trovato')
 
     @staticmethod
