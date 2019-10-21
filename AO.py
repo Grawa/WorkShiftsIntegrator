@@ -116,14 +116,6 @@ class Tabella:
                 dati_in_tabella.append(riga)
             return dati_in_tabella
 
-    def turno(self):
-        """ritorna una lista dei turni in tabella"""
-        listaelem = []
-        for riga in self.elenca_righe():
-            elem_in_colonna = riga[0]
-            listaelem.append(elem_in_colonna)
-        return listaelem
-
     def verifica_presenza_turno_su_tabella(self, turno):                                         # (ex VerificaTurno)
         """
         verifica se presente il turno nella tabella
@@ -131,9 +123,13 @@ class Tabella:
         :param turno: Inserire un turno in formato "00:00-00:00" (es. '07:00-13:00')
         :return: restituisce True se lo trova altrimenti False per avvisare che non è in lista
         """
-        if turno in self.turno():
-            return True
-        else:
+        try:
+            if turno == self.cerca_nella_tabella(turno)[0][0] and self.cerca_nella_tabella(turno)[0][2] == "inattivo":
+                return "inattivo"
+            if turno == self.cerca_nella_tabella(turno)[0][0]:
+                return True
+
+        except:
             return False
 
     def cerca_nella_tabella(self, turno):
@@ -301,6 +297,9 @@ class ManagerTurni:
         for data, turno in dizturni.items():                                         # restituisce data e turno singoli
             if self.filetabella.verifica_presenza_turno_su_tabella(turno) is False:  # c.errori: in caso di nuovi turni
                 errori.append(f"{data}, {turno}")
+
+            elif self.filetabella.verifica_presenza_turno_su_tabella(turno) == "inattivo":
+                print("turno inattivo", turno)
 
             elif self.dbturnimensile.verifica_presenza_turno_su_db(data) is False:   # controlla se la data è già nel db
                 turno_da_scrivere = self.filetabella.cerca_nella_tabella(turno)
