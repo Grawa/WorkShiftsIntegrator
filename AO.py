@@ -3,7 +3,7 @@ import csv
 import sqlite3
 from datetime import datetime
 import calendar
-from PyQt5.QtWidgets import QApplication, QWidget,QHeaderView
+from PyQt5.QtWidgets import QApplication, QWidget, QHeaderView
 from PyQt5 import uic, QtWidgets, QtCore
 import os
 import time
@@ -619,4 +619,3 @@ if __name__ == "__main__":
     window3 = UiEliminaVecchiDB()
     window.show()
     app.exec()
-
