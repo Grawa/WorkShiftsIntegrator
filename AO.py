@@ -563,7 +563,7 @@ class UiComandiSql(QWidget):
         self.lineEdit.setText("SELECT * FROM reminders")
 
     def cerca_pulsante(self):
-        self.lineEdit.setText("SELECT * FROM reminders WHERE reminder_date LIKE ' '")
+        self.lineEdit.setText("SELECT * FROM reminders WHERE reminder_date LIKE '%YYYY-MM-DD%'")
 
 
 class UiEliminaVecchiDB(QWidget):
