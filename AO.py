@@ -195,7 +195,7 @@ class DBTurni:
         elem_su_db = self.comando_sql("SELECT reminder_date,reminder_name FROM reminders")
         lista_elem = []
         for elem, elem2 in elem_su_db:
-            lista_elem.append(elem + " " + elem2)
+            lista_elem.append(elem + ", " + elem2)
         return lista_elem
 
     def verifica_presenza_turno_su_db(self, data):                                    # (ex filtrodoppiturni)
