@@ -571,9 +571,9 @@ class UiEliminaVecchiDB(QWidget):
         super().__init__()
         self.lista_file_da_elim = None
         try:
-            uic.loadUi("Ui3.ui", self)
+            uic.loadUi("AO_files\\ELIM_FILE_DB.ui", self)
         except FileNotFoundError:
-            print("Errore: Ui3.ui non trovato")
+            print("Errore: AO_files\\ELIM_FILE_DB.ui non trovato")
             time.sleep(5)
 
     def aggiorna_finestra(self):
