@@ -337,6 +337,12 @@ class Ui(QWidget):
             self.pushButton_drivesync.setEnabled(False)
         self._google_drive_run_check()  # controlla se avviato e imposta testo pulsante (setText nel metodo)
 
+    filetabella1 = None  # dichiara valore default delle variabili globali (evita errore pep8 global)
+    fileturni1 = None
+    nome_dip2 = None
+    perc_filedb_fixed = None
+    filedb1 = None
+
     def _google_drive_run_check(self):
         listatask = subprocess.check_output("tasklist")
         gdriveisrunning = "googledrivesync.exe" in str(listatask)
