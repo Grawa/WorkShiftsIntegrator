@@ -129,7 +129,8 @@ class Tabella:
             if turno == self.cerca_nella_tabella(turno)[0][0]:
                 return True
 
-        except:
+        except Exception as info_errore:
+            print(info_errore)
             return False
 
     def cerca_nella_tabella(self, turno):
@@ -383,7 +384,8 @@ class Ui(QWidget):
             self.pushButton_2.setText("Cambia...")
 
             self.pushButton_3.setEnabled(True)  # abilita tasto inserisci turni su db
-        except:
+        except Exception as info_errore:
+            print(info_errore)
             QtWidgets.QMessageBox.warning(window, "Errore", "Nessuna cartella selezionata o file non riconosciuto!")
 
     def cambio_nome_dip_combobox(self, nome_dip):
@@ -392,7 +394,8 @@ class Ui(QWidget):
             nome_dip2 = str(nome_dip)
             self.listWidget.clear()
             self.listWidget.addItems(fileturni1.lista_elementi_in_tabellone(nome_dip))  # aggiunge i turni
-        except:
+        except Exception as info_errore:
+            print(info_errore)
             QtWidgets.QMessageBox.warning(window, "Errore", 'Lista vuota (per iniziare clicca "Seleziona...")'
                                                             ' o dipendente non trovato!')
 
@@ -419,7 +422,8 @@ class Ui(QWidget):
             if window3.aggiorna_finestra():  # aggiorna la finestra e se ci sono file file da rimuovere la mostra
                 window3.show()
 
-        except:
+        except Exception as info_errore:
+            print(info_errore)
             QtWidgets.QMessageBox.warning(window, "Errore", "File vuoto o non riconosciuto!")
 
     def inserisci_turni_pulsante(self):
@@ -459,7 +463,8 @@ class Ui(QWidget):
 
             else:
                 QtWidgets.QMessageBox.warning(window, "Info", "Operazione eseguita con errori!")
-        except:
+        except Exception as info_errore:
+            print(info_errore)
             QtWidgets.QMessageBox.warning(window, "Errore", "Errore nella scrittura del database!")
 
     def aggiorna_gui_turni(self):
@@ -567,7 +572,8 @@ class UiComandiSql(QWidget):
                 self.textBrowser.setText("COMANDO SQL INVIATO (nessuna risposta dal database)")
             else:
                 self.textBrowser.setText(str(risposta))
-        except:
+        except Exception as info_errore:
+            print(info_errore)
             self.textBrowser.setText(f"COMANDO SQL NON RICONOSCIUTO.")
 
     def elimina_pulsante(self):
