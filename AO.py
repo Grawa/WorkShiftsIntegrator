@@ -417,7 +417,6 @@ class Ui(QWidget):
             self.pushButton_2.setEnabled(True)  # abilita tasto per selezionare db
             self.pushButton_9.setEnabled(True)  # abilita tasto per selezionare comandi sql manuali
             self._google_drive_run_check()
-            print(perc_filedb_fixed)
 
             if window3.aggiorna_finestra():  # aggiorna la finestra e se ci sono file file da rimuovere la mostra
                 window3.show()
