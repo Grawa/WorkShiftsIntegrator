@@ -503,8 +503,11 @@ class Ui(QWidget):
             (app TimeTune>Impostazioni>Backup)
            
            
-        2) Selezionare il Database del backup e il Tabellone e
-           Cliccare "Inserisci turni su database".
+        2) Selezionare la cartella dove presente il database del backup
+            (se presenti più file verrà individuato automaticamente il più recente)
+            e il file del Tabellone...
+            Selezionare quindi il dipendente da inserire.
+            Cliccare quindi su "Inserisci turni su database".
            
             Nota: è importante creare sempre il backup del database aggiornato 
             prima di scrivere i turni nuovi, in alternativa si perderanno 
@@ -519,7 +522,8 @@ class Ui(QWidget):
             cellulare di scaricare la copia aggiornata del file.
 
 
-        *Integrazione con google drive sync disponibile solo per PC windows.
+        *Integrazione con google drive sync disponibile per PC Windows.
+          Link: https://www.google.com/drive/download/
             """)
 
     @staticmethod
