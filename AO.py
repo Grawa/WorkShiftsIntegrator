@@ -217,7 +217,7 @@ class DBTurni:
         return f
 
     @staticmethod
-    def verif_file_da_rimuovere(perc_filedb):
+    def cerca_filedb_da_rimuovere(perc_filedb):
         """
         verifica se ci sono vecchi file database nella stessa directory del file indicato
         :param perc_filedb: percorso del file database
@@ -248,8 +248,8 @@ class DBTurni:
             return []
 
     @staticmethod
-    def verif_file_da_selezionare(directory):
-
+    def cerca_filedb_piu_recente(directory):
+        """cerca il file piu recente nella directory fornita"""
         # ELENCA TUTTI I FILE NELLA DIRECTORY DEL FILE SELEZIONATO
         listafiledir = glob.glob(directory + "//*")             # elenca in una lista i file presenti nella directory
 
@@ -396,7 +396,7 @@ class Ui(QWidget):
         try:
             global perc_filedb_fixed
             perc_cart_filedb = QtWidgets.QFileDialog.getExistingDirectory(window, 'Seleziona cartella...')
-            perc_filedb = DBTurni.verif_file_da_selezionare(perc_cart_filedb)
+            perc_filedb = DBTurni.cerca_filedb_piu_recente(perc_cart_filedb)
             perc_filedb_fixed = perc_filedb.replace('\\', '/')
 
             global filedb1
@@ -592,7 +592,7 @@ class UiEliminaVecchiDB(QWidget):
         aggiorna la lista di file da eliminare
         :return: Controlla se ci sono file da eliminare ritorna True altrimenti False """
 
-        self.lista_file_da_elim = DBTurni.verif_file_da_rimuovere(perc_filedb_fixed)  # Verif.se ci sono file da elim.
+        self.lista_file_da_elim = DBTurni.cerca_filedb_da_rimuovere(perc_filedb_fixed)  # Verif.se ci sono file da elim.
         self.listWidget.clear()
         self.listWidget.addItems(self.lista_file_da_elim)  # Aggiunge la lista dei file al listWidget
 
