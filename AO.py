@@ -299,7 +299,7 @@ class ManagerTurni:
                 errori.append(f"{data}, {turno}")
 
             elif self.filetabella.verifica_presenza_turno_su_tabella(turno) == "inattivo":
-                print("turno inattivo", turno)
+                pass
 
             elif self.dbturnimensile.verifica_presenza_turno_su_db(data) is False:   # controlla se la data è già nel db
                 turno_da_scrivere = self.filetabella.cerca_nella_tabella(turno)
@@ -520,6 +520,14 @@ class Ui(QWidget):
             che il backup sia stato caricato correttamente da pc e sul
             cellulare di scaricare la copia aggiornata del file.
 
+        Funzionalità aggiuntive:
+        Le note per disponibilità parcheggio verranno aggiunte automaticamente
+        
+        E'possibile disattivare una notifica aggiungendo la parola
+        "inattivo" al posto dell'orario di notifica sul file Tabella.
+        (il turno non verrà scritto su database e non verrà segnalato
+        nei turni saltati o negli errori perchè disattivato intenzionalmente)
+        
 
         *Integrazione con google drive sync disponibile per PC Windows.
           Link: https://www.google.com/drive/download/
