@@ -444,7 +444,7 @@ class Ui(QWidget):
             self.listWidget_6.addItems(turni_scritti)
             self.listWidget_5.addItems(turni_saltati)
             self.listWidget_4.addItems(errori)
-            if len(errori) == 0 and len(turni_saltati) == 0:
+            if len(errori) == 0 and len(turni_saltati) == 0 and len(turni_scritti) >= 1:
                 if os.path.exists(f"{os.environ['HOMEDRIVE']}\\Program Files\\Google\\Drive\\googledrivesync.exe"):
                     if not self._google_drive_run_check():  # controlla, se google drive non è avviato
                         QtWidgets.QMessageBox.information(window, "Info", "Operazione eseguita con successo.\n\n"
