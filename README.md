@@ -20,3 +20,5 @@ pip install openpyxl
 pip install PyQt5
 pip install PyQt5-stubs
 ```
+Per avviare il programma è necessario che la cartella AO_files
+sia nella stessa directory del file python principale (AO.py)
