@@ -163,18 +163,19 @@ class DBTurni:
         """ottimizza il database: elimina i vecchi turni inattivi"""
         return self.comando_sql("DELETE FROM reminders WHERE reminder_active='0';")
 
-    def scrivi_turno(self, data, note, ora_notifica, parcheggio):
+    def scrivi_turno(self, data, note, ora_notifica, parcheggio, perc_suoneria):
         """
         Aggiunge un turno di lavoro al database
         :param data: Data del turno in formato YYYY-MM-DD (es.'2019-07-24')
         :param note: Note sul turno
         :param ora_notifica: orario di notifica in formato HH:MM (es. '15:25')
         :param parcheggio: Aggiunge nota su disponibilità parcheggio (es.' ! No parcheggio')
+        :param perc_suoneria: Aggiunge il percorso su memoria disp. android della suoneria della notifica
         :return: restituisce la risposta o i dati dal database
         """
         f = self.comando_sql(f"INSERT INTO reminders VALUES(NULL,'{note} {parcheggio}','{data} {ora_notifica}'"
                              f",'1','0','0','0','0','11','','0','1','0','0','0','0','0','','0','1',"
-                             f"'file:///storage/emulated/0/Ringtones/innocence.op.ogg','1','5','1','1','0');")
+                             f"'{perc_suoneria}','1','5','1','1','0');")
         return f
 
     def _leggi_date_su_db(self):
@@ -274,12 +275,14 @@ class ManagerTurni:
     :param fileturni: istanza di FileTurni
     :param filetabella: istanza di FileTurni
     :param dbturnimensile: istanza di DBTurni
+    :param perc_suoneria: percorso del file suoneria per la notifica
     """
-    def __init__(self, dipendente, fileturni, filetabella, dbturnimensile):
+    def __init__(self, dipendente, fileturni, filetabella, dbturnimensile, perc_suoneria):
         self.dipendente = str(dipendente)
         self.fileturni = fileturni
         self.filetabella = filetabella
         self.dbturnimensile = dbturnimensile
+        self.perc_suoneria = perc_suoneria
 
     def inserisci_tutti_i_turni_su_db(self):
         """
@@ -307,7 +310,7 @@ class ManagerTurni:
                 note = turno_da_scrivere[0][1]
                 notifica = turno_da_scrivere[0][2]
                 parcheggio = self.fileturni.verifica_parcheggio(data, turno)
-                self.dbturnimensile.scrivi_turno(data, note, notifica, parcheggio)   # scrive il turno su db
+                self.dbturnimensile.scrivi_turno(data, note, notifica, parcheggio, self.perc_suoneria)   # scrive su db
                 turni_scritti.append(f"{data}, {turno}")                             # aggiunge i turni scritti
             else:
                 turni_saltati.append(f"{data}, {turno}")                             # indica eventuali turni saltati
@@ -427,7 +430,8 @@ class Ui(QWidget):
 
     def inserisci_turni_pulsante(self):
         try:
-            manager1 = ManagerTurni(nome_dip2, fileturni1, filetabella1, filedb1)
+            perc_suoneria = self.lineEdit_suoneria.text()
+            manager1 = ManagerTurni(nome_dip2, fileturni1, filetabella1, filedb1, perc_suoneria)
             lista_turni, turni_scritti, turni_saltati, errori = manager1.inserisci_tutti_i_turni_su_db()
             self.aggiorna_gui_turni()
             self.listWidget_2.clear()
