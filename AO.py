@@ -482,12 +482,13 @@ class Ui(QWidget):
     def info_pulsante():
         QtWidgets.QMessageBox.information(window, "Info", """
         Descrizione:
-        Il programma legge i turni da un file excel
-        e li scrive su un database ripristinabile sull'app 
-        (di terze parti) TimeTune.
+        Il programma aggiunge dei turni di lavoro ad
+        un database dell'app (di terze parti) Timetune per Android.
+        I turni vengono letti da un file excel.
 
         Viene impostato un reminder per ogni turno trovato
-        con notifica e note in base ai dati presenti nella Tabella.
+        con notifica e note personalizzati (in base ai dati presenti
+        nella Tabella.)
 
         Il sistema inoltre aggiunge automaticamente alle note l'eventuale 
         mancanza di parcheggio in caso di pulizie stradali
@@ -495,8 +496,8 @@ class Ui(QWidget):
         
         Versione: 1.0
         Il programma viene fornito senza alcuna garanzia di funzionamento,
-        è Open Source e fa uso delle librerie Qt e delle app di 
-        terze parti TimeTune per Android e Google drive.
+        è Open Source in licenza GNU GPL V3. Utilizza le librerie Qt e software di 
+        terze parti TimeTune per Android e Google drive per windows.
         
         (c) 2019 Graziano Porcu
         https://github.com/Grawa
@@ -506,13 +507,13 @@ class Ui(QWidget):
     @staticmethod
     def guida_pulsante():
         QtWidgets.QMessageBox.information(window, "Info", """
-                                                        Guida:
+        Guida:
         
         1) Fare il backup del database da cellulare (consigliato su Google Drive*)...
             (app TimeTune>Impostazioni>Backup)
            
            
-        2) Selezionare la cartella dove presente il database del backup
+        2) Selezionare la cartella dove presente il database del backup*
             (se presenti più file verrà individuato automaticamente il più recente)
             e il file del Tabellone...
             Selezionare quindi il dipendente da inserire.
@@ -521,25 +522,28 @@ class Ui(QWidget):
             Nota: è importante creare sempre il backup del database aggiornato 
             prima di scrivere i turni nuovi, in alternativa si perderanno 
             eventuali cambi e variazioni di turno eseguite tramite l'app.
-           
+            
            
         3) Ripristinare il database sul cellulare...
             (app TimeTune>Impostazioni>Backup)
             
-            Nota: In caso di backup su Google Drive*, da pc accertarsi
+            Nota: In caso di backup su Google Drive**, da pc accertarsi
             che il backup sia stato caricato correttamente da pc e sul
             cellulare di scaricare la copia aggiornata del file.
-
-        Funzionalità aggiuntive:
-        Le note per disponibilità parcheggio verranno aggiunte automaticamente
+            
+        ---------------------------
         
-        E'possibile disattivare una notifica aggiungendo la parola
+        Funzionalità aggiuntive:
+        
+        E'possibile disattivare una singola notifica aggiungendo la parola
         "inattivo" al posto dell'orario di notifica sul file Tabella.
         (il turno non verrà scritto su database e non verrà segnalato
         nei turni saltati o negli errori perchè disattivato intenzionalmente)
         
+        *Nota: Non rinominare il file di backup: per essere riconosciuto  
+        automaticamente deve contenere la parola "Timetune Backup"
 
-        *Integrazione con google drive sync disponibile per PC Windows.
+        **Integrazione con google drive sync disponibile per PC Windows.
           Link: https://www.google.com/drive/download/
             """)
 
