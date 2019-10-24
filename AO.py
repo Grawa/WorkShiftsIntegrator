@@ -389,7 +389,7 @@ class Ui(QWidget):
             self.pushButton_3.setEnabled(True)  # abilita tasto inserisci turni su db
         except Exception as info_errore:
             print(info_errore)
-            QtWidgets.QMessageBox.warning(window, "Errore", "Nessuna cartella selezionata o file non riconosciuto!")
+            QtWidgets.QMessageBox.warning(window, "Errore", "File vuoto o non riconosciuto!")
 
     def cambio_nome_dip_combobox(self, nome_dip):
         try:
@@ -426,7 +426,7 @@ class Ui(QWidget):
 
         except Exception as info_errore:
             print(info_errore)
-            QtWidgets.QMessageBox.warning(window, "Errore", "File vuoto o non riconosciuto!")
+            QtWidgets.QMessageBox.warning(window, "Errore", "Nessuna cartella selezionata o file non riconosciuto!")
 
     def inserisci_turni_pulsante(self):
         try:
@@ -579,6 +579,7 @@ class UiComandiSql(QWidget):
                 self.textBrowser.setText("COMANDO SQL INVIATO (nessuna risposta dal database)")
             else:
                 self.textBrowser.setText(str(risposta))
+            window.aggiorna_gui_turni()
         except Exception as info_errore:
             print(info_errore)
             self.textBrowser.setText(f"COMANDO SQL NON RICONOSCIUTO.")
@@ -638,5 +639,3 @@ if __name__ == "__main__":
     window3 = UiEliminaVecchiDB()
     window.show()
     app.exec()
-
-
