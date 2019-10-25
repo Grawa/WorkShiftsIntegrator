@@ -283,6 +283,7 @@ class ManagerTurni:
         self.filetabella = filetabella
         self.dbturnimensile = dbturnimensile
         self.perc_suoneria = perc_suoneria
+        window.aggiorna_lineedit_suoneria()
 
     def inserisci_tutti_i_turni_su_db(self):
         """
@@ -340,12 +341,26 @@ class Ui(QWidget):
             self.pushButton_drivesync.setText("Google Drive sync non disponibile")
             self.pushButton_drivesync.setEnabled(False)
         self._google_drive_run_check()  # controlla se avviato e imposta testo pulsante (setText nel metodo)
+        self.lineEdit_suoneria.setReadOnly(True)
+        self.aggiorna_lineedit_suoneria()
 
     filetabella1 = None  # dichiara valore default delle variabili globali (evita errore pep8 global)
     fileturni1 = None
     nome_dip2 = None
     perc_filedb_fixed = None
     filedb1 = None
+
+    @staticmethod
+    def modifica_suoneria_pulsante():
+        try:
+            os.startfile("AO_files\\config_suoneria.txt")
+        except Exception as info_errore:
+            print(info_errore)
+
+    def aggiorna_lineedit_suoneria(self):
+        with open("AO_files\\config_suoneria.txt") as suoneria:
+            perc_suoneria = suoneria.read()
+        self.lineEdit_suoneria.setText(perc_suoneria)
 
     def _google_drive_run_check(self):
         listatask = subprocess.check_output("tasklist")
