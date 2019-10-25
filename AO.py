@@ -418,6 +418,13 @@ class Ui(QWidget):
                                                             ' o dipendente non trovato!')
 
     def carica_database(self):
+
+        if not self._google_drive_run_check():      # controlla che google drive non sia gia avviato
+            QtWidgets.QMessageBox.information(window, "Info",
+                                              "Google drive sync non avviato.\n\n"
+                                              "Puoi avviarlo e utilizzarlo per "
+                                              "sincronizzare il file di backup...")
+
         QtWidgets.QMessageBox.information(window, "Info", "Esegui il backup del database dall'app Timetune...\n\n"
                                                           "Premi OK per selezionare il database")
         try:
@@ -436,7 +443,7 @@ class Ui(QWidget):
             self.pushButton_9.setEnabled(True)  # abilita tasto per selezionare comandi sql manuali
             self._google_drive_run_check()
 
-            if window3.aggiorna_finestra():  # aggiorna la finestra e se ci sono file file da rimuovere la mostra
+            if window3.aggiorna_finestra():  # aggiorna la finestra e se ci sono file da rimuovere mostra window3
                 window3.show()
 
         except Exception as info_errore:
@@ -463,24 +470,19 @@ class Ui(QWidget):
             self.listWidget_5.addItems(turni_saltati)
             self.listWidget_4.addItems(errori)
             if len(errori) == 0 and len(turni_saltati) == 0 and len(turni_scritti) >= 1:
-                if os.path.exists(f"{os.environ['HOMEDRIVE']}\\Program Files\\Google\\Drive\\googledrivesync.exe"):
-                    if not self._google_drive_run_check():  # controlla, se google drive non è avviato
-                        QtWidgets.QMessageBox.information(window, "Info", "Operazione eseguita con successo.\n\n"
-                                                                          "Ripristina ora il backup sull'app Timetune!"
-                                                                          "\n\n\n"
-                                                                          "Nota: Google drive sync non avviato:\n"
-                                                                          "Avvialo se vuoi utilizzarlo per "
-                                                                          "sincronizzare i backup...")
-                    else:
-                        QtWidgets.QMessageBox.information(window, "Info", "Operazione eseguita con successo.\n\n"
-                                                                          "Ripristina ora il backup sull'app Timetune!")
-
-                else:
-                    QtWidgets.QMessageBox.information(window, "Info", "Operazione eseguita con successo.\n\n"
-                                                              "Ripristina ora il backup sull'app Timetune!")
-
+                QtWidgets.QMessageBox.information(window, "Info", "Operazione eseguita con successo.\n\n"
+                                                          "Ripristina ora il backup sull'app Timetune!")
+            elif len(errori) == 0 and len(turni_saltati) >= 1:
+                QtWidgets.QMessageBox.information(window, "Info", "Operazione eseguita.\n\n"
+                                                          "Alcuni turni sono stati saltati perchè le date erano "
+                                                          "già presenti sul database...\n"
+                                                          "Verifica i turni scritti prima di ripristinare il backup "
+                                                          "sull'app Timetune ed eventualmente modificali!")
             else:
-                QtWidgets.QMessageBox.warning(window, "Info", "Operazione eseguita con errori!")
+                QtWidgets.QMessageBox.warning(window, "Info", "Operazione eseguita con errori!.\n\n"
+                                                      "Verifica se ci sono ad esempio turni nuovi ed eventualmente "
+                                                      "inseriscili in Tabella,quindi ripeti l'operazione...")
+
         except Exception as info_errore:
             print(info_errore)
             QtWidgets.QMessageBox.warning(window, "Errore", "Errore nella scrittura del database!")
@@ -528,6 +530,9 @@ class Ui(QWidget):
         QtWidgets.QMessageBox.information(window, "Info", """
         Guida:
         
+        Importante: impostare il file della suoneria sulla memoria
+        del cellulare (di default è impostato sdcard/Ringtones/suoneria.ogg) 
+            
         1) Fare il backup del database da cellulare (consigliato su Google Drive*)...
             (app TimeTune>Impostazioni>Backup)
            
@@ -552,7 +557,7 @@ class Ui(QWidget):
             
         ---------------------------
         
-        Funzionalità aggiuntive:
+        Note:
         
         E'possibile disattivare una singola notifica aggiungendo la parola
         "inattivo" al posto dell'orario di notifica sul file Tabella.
