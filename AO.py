@@ -292,7 +292,6 @@ class ManagerTurni:
         I turni_saltati sono quelli già inclusi nel database mentre gli errori sono quelli non inclusi nella tabella.
         """
 
-        self.dbturnimensile.ottimizza_db()                                           # elimina vecchi turni sul database
         dizturni = self.fileturni.turni_mensili(self.dipendente)                     # dizionario con i turni mensili
 
         errori = []
@@ -319,6 +318,8 @@ class ManagerTurni:
         lista_turni = []
         for data, turno in dizturni.items():
             lista_turni.append(f"{data}, {turno}")
+
+        self.dbturnimensile.ottimizza_db()                                           # elimina vecchi turni sul database
 
         return lista_turni, turni_scritti, turni_saltati, errori
 
