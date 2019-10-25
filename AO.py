@@ -398,7 +398,7 @@ class Ui(QWidget):
             fileturni, _ = QtWidgets.QFileDialog.getOpenFileName(self, 'Seleziona file...', QtCore.QDir.rootPath(),
                                                                  "Excel files (*.xlsx);;ALL files (*.*)")
             fileturni1 = FileTurni(fileturni)
-            self.comboBox.addItems(["Seleziona..."])
+            self.comboBox.addItem("Seleziona...")
             self.comboBox.addItems(fileturni1.elenco_dipendenti())  # aggiunge i dipendenti alla lista
             self.pushButton_2.setText("Cambia...")
 
@@ -480,7 +480,7 @@ class Ui(QWidget):
                                                           "Verifica i turni scritti prima di ripristinare il backup "
                                                           "sull'app Timetune ed eventualmente modificali!")
             else:
-                QtWidgets.QMessageBox.warning(window, "Info", "Operazione eseguita con errori!.\n\n"
+                QtWidgets.QMessageBox.warning(window, "Info", "Operazione eseguita con errori!\n\n"
                                                       "Verifica se ci sono ad esempio turni nuovi ed eventualmente "
                                                       "inseriscili in Tabella,quindi ripeti l'operazione...")
 
@@ -518,8 +518,8 @@ class Ui(QWidget):
         
         Versione: 1.0
         Il programma viene fornito senza alcuna garanzia di funzionamento,
-        è Open Source in licenza GNU GPL V3. Utilizza le librerie Qt e software di 
-        terze parti TimeTune per Android e Google drive per windows.
+        è Open Source in licenza GNU GPL V3. Utilizza le librerie Qt e altro 
+        software (di terze parti) TimeTune per Android e Google drive per windows.
         
         (c) 2019 Graziano Porcu
         https://github.com/Grawa
