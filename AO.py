@@ -398,6 +398,7 @@ class Ui(QWidget):
             fileturni, _ = QtWidgets.QFileDialog.getOpenFileName(self, 'Seleziona file...', QtCore.QDir.rootPath(),
                                                                  "Excel files (*.xlsx);;ALL files (*.*)")
             fileturni1 = FileTurni(fileturni)
+            self.comboBox.clear()
             self.comboBox.addItem("Seleziona...")
             self.comboBox.addItems(fileturni1.elenco_dipendenti())  # aggiunge i dipendenti alla lista
             self.pushButton_2.setText("Cambia...")
