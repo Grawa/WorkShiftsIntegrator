@@ -116,22 +116,34 @@ class Tabella:
                 dati_in_tabella.append(riga)
             return dati_in_tabella
 
-    def verifica_presenza_turno_su_tabella(self, turno):                                         # (ex VerificaTurno)
+    def verifica_presenza_turno_su_tabella(self, turno):
         """
-        verifica se presente il turno nella tabella
+        verifica se presente il turno nella tabella e i suoi stati(es.sveglia,abilitazione)
         (serve in caso di nuovi turni/non presenti in tabella)
         :param turno: Inserire un turno in formato "00:00-00:00" (es. '07:00-13:00')
         :return: restituisce True se lo trova altrimenti False per avvisare che non è in lista
         """
         try:
-            if turno == self.cerca_nella_tabella(turno)[0][0] and self.cerca_nella_tabella(turno)[0][2] == "inattivo":
-                return "inattivo"
-            if turno == self.cerca_nella_tabella(turno)[0][0]:
+            if turno == self.cerca_nella_tabella(turno)[0][0] and self.cerca_nella_tabella(turno)[0][4] == "NO":
+                return "NO_ABILIT"  # Controlla se turno non abilitato
+
+            if turno == self.cerca_nella_tabella(turno)[0][0]:  # Controlla se presente in tabella
                 return True
 
         except Exception as info_errore:
             print(info_errore)
             return False
+
+    def verifica_sveglia(self, turno):
+        """verifica se è attiva la sveglia (DEFAULT ATTIVA)"""
+        try:
+            if turno == self.cerca_nella_tabella(turno)[0][0] and self.cerca_nella_tabella(turno)[0][3] == "NO":
+                return False
+            else:
+                return True
+        except Exception as info_errore:
+            print(info_errore)
+            return True
 
     def cerca_nella_tabella(self, turno):
         """
@@ -163,7 +175,7 @@ class DBTurni:
         """ottimizza il database: elimina i vecchi turni inattivi"""
         return self.comando_sql("DELETE FROM reminders WHERE reminder_active='0';")
 
-    def scrivi_turno(self, data, note, ora_notifica, parcheggio, perc_suoneria):
+    def scrivi_turno(self, data, note, ora_notifica, parcheggio, perc_suoneria, sveglia):
         """
         Aggiunge un turno di lavoro al database
         :param data: Data del turno in formato YYYY-MM-DD (es.'2019-07-24')
@@ -171,11 +183,18 @@ class DBTurni:
         :param ora_notifica: orario di notifica in formato HH:MM (es. '15:25')
         :param parcheggio: Aggiunge nota su disponibilità parcheggio (es.' ! No parcheggio')
         :param perc_suoneria: Aggiunge il percorso su memoria disp. android della suoneria della notifica
+        :param sveglia: Tipo booleano,si intende sveglia attiva? True/False
         :return: restituisce la risposta o i dati dal database
         """
-        f = self.comando_sql(f"INSERT INTO reminders VALUES(NULL,'{note} {parcheggio}','{data} {ora_notifica}'"
-                             f",'1','0','0','0','0','11','','0','1','0','0','0','0','0','','0','1',"
-                             f"'{perc_suoneria}','1','5','1','1','0');")
+        if sveglia is True:
+            f = self.comando_sql(f"INSERT INTO reminders VALUES(NULL,'{note} {parcheggio}','{data} {ora_notifica}'"
+                                 f",'1','0','0','0','0','11','','0','1','0','0','0','0','0','','0','1',"
+                                 f"'{perc_suoneria}','1','5','1','1','0');")  # con sveglia
+        else:
+            f = self.comando_sql(f"INSERT INTO reminders VALUES(NULL,'{note} {parcheggio}','{data} {ora_notifica}'"
+                                 f",'1','0','0','0','12','11','','0','1','0','0','0','0','0','','0','0',"
+                                 f"'{perc_suoneria}','0','5','1','0','0');")  # no sveglia
+
         return f
 
     def _leggi_date_su_db(self):
@@ -302,15 +321,17 @@ class ManagerTurni:
             if self.filetabella.verifica_presenza_turno_su_tabella(turno) is False:  # c.errori: in caso di nuovi turni
                 errori.append(f"{data}, {turno}")
 
-            elif self.filetabella.verifica_presenza_turno_su_tabella(turno) == "inattivo":
-                pass
+            elif self.filetabella.verifica_presenza_turno_su_tabella(turno) == "NO_ABILIT":
+                pass  # evita di scrivere il turno senza ritornare errori o segnarlo tra quelli saltati
 
             elif self.dbturnimensile.verifica_presenza_turno_su_db(data) is False:   # controlla se la data è già nel db
                 turno_da_scrivere = self.filetabella.cerca_nella_tabella(turno)
                 note = turno_da_scrivere[0][1]
                 notifica = turno_da_scrivere[0][2]
                 parcheggio = self.fileturni.verifica_parcheggio(data, turno)
-                self.dbturnimensile.scrivi_turno(data, note, notifica, parcheggio, self.perc_suoneria)   # scrive su db
+
+                sveglia = self.filetabella.verifica_sveglia(turno)  # controlla sveglia
+                self.dbturnimensile.scrivi_turno(data, note, notifica, parcheggio, self.perc_suoneria, sveglia)
                 turni_scritti.append(f"{data}, {turno}")                             # aggiunge i turni scritti
             else:
                 turni_saltati.append(f"{data}, {turno}")                             # indica eventuali turni saltati
@@ -378,11 +399,13 @@ class Ui(QWidget):
             self.tableWidget.clear()
             for indice, elem in enumerate(filetabella1.elenca_righe()):  # imposta il numero di righe della tabella
                 self.tableWidget.setRowCount(indice + 1)  # aggiunge una riga (mostra TUTTE le righe,inclusa ultima)
-                self.tableWidget.setColumnCount(3)
+                self.tableWidget.setColumnCount(5)
                 self.tableWidget.setItem(indice, 0, QtWidgets.QTableWidgetItem(elem[0]))
                 self.tableWidget.setItem(indice, 1, QtWidgets.QTableWidgetItem(elem[1]))
                 self.tableWidget.setItem(indice, 2, QtWidgets.QTableWidgetItem(elem[2]))
-            self.tableWidget.setHorizontalHeaderLabels(["TURNO", "NOTE", "NOTIFICA"])
+                self.tableWidget.setItem(indice, 3, QtWidgets.QTableWidgetItem(elem[3]))
+                self.tableWidget.setItem(indice, 4, QtWidgets.QTableWidgetItem(elem[4]))
+            self.tableWidget.setHorizontalHeaderLabels(["TURNO", "NOTE", "NOTIFICA", "SVEGLIA", "ABILITAZIONE"])
             self.tableWidget.resizeColumnsToContents()  # resize delle colonne tab.turni
             self.tableWidget.resizeRowsToContents()  # resize delle righe tab.turni
             self.tableWidget.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)  # adatta la tab.alla finestra
