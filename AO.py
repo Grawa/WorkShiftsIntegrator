@@ -137,7 +137,6 @@ class Tabella:
         try:
             tab_sveglia = str(self.cerca_nella_tabella(turno)[0][3]).upper()
             tab_turno = self.cerca_nella_tabella(turno)[0][0]
-            print(tab_sveglia)
             if turno == tab_turno and tab_sveglia == "NO":
                 return False
             else:
@@ -317,6 +316,7 @@ class ManagerTurni:
         errori = []
         turni_scritti = []
         turni_saltati = []
+        turni_senza_sveglia = []
 
         for data, turno in dizturni.items():                                         # restituisce data e turno singoli
             if self.filetabella.verifica_presenza_turno_su_tabella(turno) is False:  # c.errori: in caso di nuovi turni
@@ -331,6 +331,8 @@ class ManagerTurni:
                 sveglia = self.filetabella.verifica_sveglia(turno)  # controlla sveglia
                 self.dbturnimensile.scrivi_turno(data, note, notifica, parcheggio, self.perc_suoneria, sveglia)
                 turni_scritti.append(f"{data}, {turno}")                             # aggiunge i turni scritti
+                if sveglia is True:
+                    turni_senza_sveglia.append(f"{data}, {turno}")
             else:
                 turni_saltati.append(f"{data}, {turno}")                             # indica eventuali turni saltati
 
@@ -340,7 +342,7 @@ class ManagerTurni:
 
         self.dbturnimensile.ottimizza_db()                                           # elimina vecchi turni sul database
 
-        return lista_turni, turni_scritti, turni_saltati, errori
+        return lista_turni, turni_scritti, turni_saltati, errori, turni_senza_sveglia
 
 
 class Ui(QWidget):
@@ -474,11 +476,11 @@ class Ui(QWidget):
         try:
             perc_suoneria = self.lineEdit_suoneria.text()
             manager1 = ManagerTurni(nome_dip2, fileturni1, filetabella1, filedb1, perc_suoneria)
-            lista_turni, turni_scritti, turni_saltati, errori = manager1.inserisci_tutti_i_turni_su_db()
+            lista_turni, turni_scritti, turni_saltati, errori, senza_sveg = manager1.inserisci_tutti_i_turni_su_db()
             self.aggiorna_gui_turni()
             self.listWidget_riepilogo.clear()
             self.listWidget_riepilogo.addItem(f"Turni trovati: {len(lista_turni)}")
-            self.listWidget_riepilogo.addItem(f"Turni scritti: {len(turni_scritti)}")
+            self.listWidget_riepilogo.addItem(f"Turni scritti: {len(turni_scritti)} (senza sveglia: {len(senza_sveg)})")
             self.listWidget_riepilogo.addItem(f"Turni saltati(già su db): {len(turni_saltati)}")
             self.listWidget_riepilogo.addItem(f"Turni non in lista(errori): {len(errori)}")
             self.listWidget_turnitrovati.clear()
