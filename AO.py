@@ -124,12 +124,10 @@ class Tabella:
         :return: restituisce True se lo trova altrimenti False per avvisare che non è in lista
         """
         try:
-            if turno == self.cerca_nella_tabella(turno)[0][0] and self.cerca_nella_tabella(turno)[0][4] == "NO":
-                return "NO_ABILIT"  # Controlla se turno non abilitato
-
             if turno == self.cerca_nella_tabella(turno)[0][0]:  # Controlla se presente in tabella
                 return True
-
+            else:
+                return False
         except Exception as info_errore:
             print(info_errore)
             return False
@@ -321,9 +319,6 @@ class ManagerTurni:
             if self.filetabella.verifica_presenza_turno_su_tabella(turno) is False:  # c.errori: in caso di nuovi turni
                 errori.append(f"{data}, {turno}")
 
-            elif self.filetabella.verifica_presenza_turno_su_tabella(turno) == "NO_ABILIT":
-                pass  # evita di scrivere il turno senza ritornare errori o segnarlo tra quelli saltati
-
             elif self.dbturnimensile.verifica_presenza_turno_su_db(data) is False:   # controlla se la data è già nel db
                 turno_da_scrivere = self.filetabella.cerca_nella_tabella(turno)
                 note = turno_da_scrivere[0][1]
@@ -399,13 +394,12 @@ class Ui(QWidget):
             self.tableWidget.clear()
             for indice, elem in enumerate(filetabella1.elenca_righe()):  # imposta il numero di righe della tabella
                 self.tableWidget.setRowCount(indice + 1)  # aggiunge una riga (mostra TUTTE le righe,inclusa ultima)
-                self.tableWidget.setColumnCount(5)
+                self.tableWidget.setColumnCount(4)
                 self.tableWidget.setItem(indice, 0, QtWidgets.QTableWidgetItem(elem[0]))
                 self.tableWidget.setItem(indice, 1, QtWidgets.QTableWidgetItem(elem[1]))
                 self.tableWidget.setItem(indice, 2, QtWidgets.QTableWidgetItem(elem[2]))
                 self.tableWidget.setItem(indice, 3, QtWidgets.QTableWidgetItem(elem[3]))
-                self.tableWidget.setItem(indice, 4, QtWidgets.QTableWidgetItem(elem[4]))
-            self.tableWidget.setHorizontalHeaderLabels(["TURNO", "NOTE", "NOTIFICA", "SVEGLIA", "ABILITAZIONE"])
+            self.tableWidget.setHorizontalHeaderLabels(["TURNO", "NOTE", "NOTIFICA", "SVEGLIA"])
             self.tableWidget.resizeColumnsToContents()  # resize delle colonne tab.turni
             self.tableWidget.resizeRowsToContents()  # resize delle righe tab.turni
             self.tableWidget.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)  # adatta la tab.alla finestra
@@ -553,14 +547,15 @@ class Ui(QWidget):
         QtWidgets.QMessageBox.information(window, "Info", """
         Guida:
         
-        Importante: impostare il file della suoneria sulla memoria
-        del cellulare (di default è impostato sdcard/Ringtones/suoneria.ogg) 
+        1) Importante per il primo utilizzo:
+         Assicurarsi ed eventualmente spostare il file della suoneria sulla 
+           memoria del cellulare (di default è impostato sdcard/Ringtones/suoneria.ogg) 
             
-        1) Fare il backup del database da cellulare (consigliato su Google Drive*)...
+        2) Fare il backup del database da cellulare (consigliato su Google Drive*)...
             (app TimeTune>Impostazioni>Backup)
            
            
-        2) Selezionare la cartella dove presente il database del backup*
+        3) Selezionare la cartella dove presente il database del backup*
             (se presenti più file verrà individuato automaticamente il più recente)
             e il file del Tabellone...
             Selezionare quindi il dipendente da inserire.
@@ -571,7 +566,7 @@ class Ui(QWidget):
             eventuali cambi e variazioni di turno eseguite tramite l'app.
             
            
-        3) Ripristinare il database sul cellulare...
+        4) Ripristinare il database sul cellulare...
             (app TimeTune>Impostazioni>Backup)
             
             Nota: In caso di backup su Google Drive**, da pc accertarsi
@@ -582,12 +577,7 @@ class Ui(QWidget):
         
         Note:
         
-        E'possibile disattivare una singola notifica aggiungendo la parola
-        "inattivo" al posto dell'orario di notifica sul file Tabella.
-        (il turno non verrà scritto su database e non verrà segnalato
-        nei turni saltati o negli errori perchè disattivato intenzionalmente)
-        
-        *Nota: Non rinominare il file di backup: per essere riconosciuto  
+        *Non rinominare il file di backup: per essere riconosciuto  
         automaticamente deve contenere la parola "Timetune Backup"
 
         **Integrazione con google drive sync disponibile per PC Windows.
