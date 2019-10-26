@@ -679,3 +679,4 @@ if __name__ == "__main__":
     window3 = UiEliminaVecchiDB()
     window.show()
     app.exec()
+
