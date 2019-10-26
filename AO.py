@@ -373,16 +373,20 @@ class Ui(QWidget):
 
     def salva_suoneria_pulsante(self):
         try:
-            with open("AO_files\\config_suoneria.txt", "w") as file_perc_suoneria:
+            with open("AO_files\\cfg_suoneria", "w") as file_perc_suoneria:
                 file_perc_suoneria.write(self.lineEdit_suoneria.text())
             self.aggiorna_lineedit_suoneria()
         except Exception as info_errore:
             print(info_errore)
 
     def aggiorna_lineedit_suoneria(self):
-        with open("AO_files\\config_suoneria.txt") as suoneria:
-            perc_suoneria = suoneria.read()
-        self.lineEdit_suoneria.setText(perc_suoneria)
+        try:
+            with open("AO_files\\cfg_suoneria") as suoneria:
+                perc_suoneria = suoneria.read()
+            self.lineEdit_suoneria.setText(perc_suoneria)
+        except FileNotFoundError:
+            print("Errore: File AO_files\\cfg_suoneria non trovato")
+            time.sleep(5)
 
     def default_suoneria_pulsante(self):
         self.lineEdit_suoneria.setText("file:///storage/emulated/0/Ringtones/suoneria.ogg")
