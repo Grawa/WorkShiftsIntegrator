@@ -363,7 +363,6 @@ class Ui(QWidget):
             self.pushButton_drivesync.setText("Google Drive sync non disponibile")
             self.pushButton_drivesync.setEnabled(False)
         self._google_drive_run_check()  # controlla se avviato e imposta testo pulsante (setText nel metodo)
-        self.lineEdit_suoneria.setReadOnly(True)
         self.aggiorna_lineedit_suoneria()
 
     filetabella1 = None  # dichiara valore default delle variabili globali (evita errore pep8 global)
@@ -372,10 +371,11 @@ class Ui(QWidget):
     perc_filedb_fixed = None
     filedb1 = None
 
-    @staticmethod
-    def modifica_suoneria_pulsante():
+    def salva_suoneria_pulsante(self):
         try:
-            os.startfile("AO_files\\config_suoneria.txt")
+            with open("AO_files\\config_suoneria.txt", "w") as file_perc_suoneria:
+                file_perc_suoneria.write(self.lineEdit_suoneria.text())
+            self.aggiorna_lineedit_suoneria()
         except Exception as info_errore:
             print(info_errore)
 
@@ -383,6 +383,9 @@ class Ui(QWidget):
         with open("AO_files\\config_suoneria.txt") as suoneria:
             perc_suoneria = suoneria.read()
         self.lineEdit_suoneria.setText(perc_suoneria)
+
+    def default_suoneria_pulsante(self):
+        self.lineEdit_suoneria.setText("file:///storage/emulated/0/Ringtones/suoneria.ogg")
 
     def _google_drive_run_check(self):
         listatask = subprocess.check_output("tasklist")
@@ -474,6 +477,8 @@ class Ui(QWidget):
 
     def inserisci_turni_pulsante(self):
         try:
+            self.salva_suoneria_pulsante()
+            self.aggiorna_lineedit_suoneria()
             perc_suoneria = self.lineEdit_suoneria.text()
             manager1 = ManagerTurni(nome_dip2, fileturni1, filetabella1, filedb1, perc_suoneria)
             lista_turni, turni_scritti, turni_saltati, errori, senza_sveg = manager1.inserisci_tutti_i_turni_su_db()
@@ -679,4 +684,3 @@ if __name__ == "__main__":
     window3 = UiEliminaVecchiDB()
     window.show()
     app.exec()
-

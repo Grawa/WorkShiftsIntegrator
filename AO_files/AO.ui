@@ -384,7 +384,7 @@
      <item row="9" column="2">
       <widget class="QLabel" name="label_12">
        <property name="text">
-        <string>Suoneria (su memoria dispositivo Android):   default: &quot;file:///storage/emulated/0/Ringtones/suoneria.ogg&quot;</string>
+        <string>Suoneria (su memoria dispositivo Android): </string>
        </property>
       </widget>
      </item>
@@ -453,7 +453,7 @@
           </sizepolicy>
          </property>
          <property name="text">
-          <string>Modifica...</string>
+          <string>Salva</string>
          </property>
         </widget>
        </item>
@@ -467,6 +467,19 @@
          </property>
          <property name="text">
           <string>Aggiorna</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pushButton">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="text">
+          <string>Default</string>
          </property>
         </widget>
        </item>
@@ -730,10 +743,10 @@
    <sender>pushButton_modsuoneria</sender>
    <signal>clicked()</signal>
    <receiver>Form</receiver>
-   <slot>modifica_suoneria_pulsante()</slot>
+   <slot>salva_suoneria_pulsante()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>473</x>
+     <x>396</x>
      <y>357</y>
     </hint>
     <hint type="destinationlabel">
@@ -749,12 +762,44 @@
    <slot>aggiorna_lineedit_suoneria()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>552</x>
+     <x>475</x>
      <y>364</y>
     </hint>
     <hint type="destinationlabel">
      <x>410</x>
      <y>371</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_modsuoneria</sender>
+   <signal>clicked()</signal>
+   <receiver>Form</receiver>
+   <slot>salva_suoneria_pulsante()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>381</x>
+     <y>353</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>442</x>
+     <y>382</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton</sender>
+   <signal>clicked()</signal>
+   <receiver>Form</receiver>
+   <slot>default_suoneria_pulsante()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>532</x>
+     <y>353</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>568</x>
+     <y>300</y>
     </hint>
    </hints>
   </connection>
@@ -768,10 +813,10 @@
   <slot>info_pulsante()</slot>
   <slot>ricarica_tabella()</slot>
   <slot>guida_pulsante()</slot>
-  <slot>slot1()</slot>
   <slot>googledrivesync_pulsante()</slot>
   <slot>comandi_sql_manuali_pulsante()</slot>
-  <slot>modifica_suoneria_pulsante()</slot>
+  <slot>salva_suoneria_pulsante()</slot>
   <slot>aggiorna_lineedit_suoneria()</slot>
+  <slot>default_suoneria_pulsante()</slot>
  </slots>
 </ui>
