@@ -520,9 +520,8 @@ class Ui(QWidget):
     def info_pulsante():
         QtWidgets.QMessageBox.information(window, "Info", """
         Descrizione:
-        Il programma aggiunge dei turni di lavoro ad
+        Il programma aggiunge i turni di lavoro (da file excel) ad
         un database dell'app (di terze parti) Timetune per Android.
-        I turni vengono letti da un file excel.
 
         Viene impostato un reminder per ogni turno trovato
         con notifica e note personalizzati (in base ai dati presenti
@@ -533,7 +532,7 @@ class Ui(QWidget):
         (Secondo lunedì del mese con inizio turno entro le 11:00)
         
         Versione: 1.0
-        Il programma viene fornito senza alcuna garanzia di funzionamento,
+        Il programma viene fornito senza alcuna garanzia,
         è Open Source in licenza GNU GPL V3. Utilizza le librerie Qt e altro 
         software (di terze parti) TimeTune per Android e Google drive per windows.
         
@@ -552,6 +551,7 @@ class Ui(QWidget):
             sul dispositivo,altrimenti non potrà suonare la sveglia.
             Eventualmente copiare o spostare il file della suoneria sul dispositivo...
             (di default il percorso è sdcard/Ringtones/suoneria.ogg) 
+            
             
         1) Fare il backup del database da cellulare (consigliato su Google Drive*)...
             (app TimeTune>Impostazioni>Backup)
@@ -575,7 +575,7 @@ class Ui(QWidget):
             che il backup sia stato caricato correttamente da pc e sul
             cellulare di scaricare la copia aggiornata del file.
             
-        ---------------------------
+        ---
         
         Note:
         
@@ -583,7 +583,7 @@ class Ui(QWidget):
         automaticamente deve contenere la parola "Timetune Backup"
 
         **Integrazione con google drive sync disponibile per PC Windows.
-          Link: https://www.google.com/drive/download/
+          Download: https://www.google.com/drive/download/
             """)
 
     @staticmethod
