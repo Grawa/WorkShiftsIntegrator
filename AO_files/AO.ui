@@ -79,7 +79,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="pushButton_4">
+          <widget class="QPushButton" name="pushButton_aggturnsudb">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
              <horstretch>0</horstretch>
@@ -98,7 +98,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_3">
        <item>
-        <widget class="QListWidget" name="listWidget">
+        <widget class="QListWidget" name="listWidget_turnitabellone">
          <property name="contextMenuPolicy">
           <enum>Qt::DefaultContextMenu</enum>
          </property>
@@ -108,12 +108,12 @@
         </widget>
        </item>
        <item>
-        <widget class="QListWidget" name="listWidget_3"/>
+        <widget class="QListWidget" name="listWidget_turnidb"/>
        </item>
       </layout>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton_3">
+      <widget class="QPushButton" name="pushButton_scriviturnisudb">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Expanding" vsizetype="Maximum">
          <horstretch>0</horstretch>
@@ -202,7 +202,7 @@
         </spacer>
        </item>
        <item>
-        <widget class="QPushButton" name="pushButton_5">
+        <widget class="QPushButton" name="pushButton_modtabella">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
            <horstretch>0</horstretch>
@@ -222,7 +222,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="pushButton_7">
+        <widget class="QPushButton" name="pushButton_aggtabella">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
            <horstretch>0</horstretch>
@@ -277,7 +277,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="pushButton">
+        <widget class="QPushButton" name="pushButton_seldb">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
            <horstretch>0</horstretch>
@@ -319,7 +319,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="pushButton_2">
+        <widget class="QPushButton" name="pushButton_seltabellone">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
            <horstretch>0</horstretch>
@@ -347,7 +347,7 @@
       </layout>
      </item>
      <item row="7" column="2">
-      <widget class="QTableWidget" name="tableWidget">
+      <widget class="QTableWidget" name="tableWidget_tabella">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
          <horstretch>0</horstretch>
@@ -367,7 +367,7 @@
       </widget>
      </item>
      <item row="4" column="2">
-      <widget class="QComboBox" name="comboBox">
+      <widget class="QComboBox" name="comboBox_dip">
        <property name="font">
         <font>
          <pointsize>9</pointsize>
@@ -445,7 +445,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="pushButton_10">
+        <widget class="QPushButton" name="pushButton_modsuoneria">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
            <horstretch>0</horstretch>
@@ -458,7 +458,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="pushButton_11">
+        <widget class="QPushButton" name="pushButton_aggsuoneria">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
            <horstretch>0</horstretch>
@@ -498,7 +498,7 @@
       </widget>
      </item>
      <item row="1" column="2">
-      <widget class="QListWidget" name="listWidget_6"/>
+      <widget class="QListWidget" name="listWidget_turniinseriti"/>
      </item>
      <item row="0" column="1">
       <widget class="QLabel" name="label_10">
@@ -508,13 +508,13 @@
       </widget>
      </item>
      <item row="1" column="3">
-      <widget class="QListWidget" name="listWidget_5"/>
+      <widget class="QListWidget" name="listWidget_turnisaltati"/>
      </item>
      <item row="1" column="4">
-      <widget class="QListWidget" name="listWidget_4"/>
+      <widget class="QListWidget" name="listWidget_errori"/>
      </item>
      <item row="1" column="0">
-      <widget class="QListWidget" name="listWidget_2"/>
+      <widget class="QListWidget" name="listWidget_riepilogo"/>
      </item>
      <item row="0" column="0">
       <widget class="QLabel" name="label_11">
@@ -524,17 +524,17 @@
       </widget>
      </item>
      <item row="1" column="1">
-      <widget class="QListWidget" name="listWidget_7"/>
+      <widget class="QListWidget" name="listWidget_turnitrovati"/>
      </item>
      <item row="2" column="4">
-      <widget class="QPushButton" name="pushButton_6">
+      <widget class="QPushButton" name="pushButton_info">
        <property name="text">
         <string>Info</string>
        </property>
       </widget>
      </item>
      <item row="2" column="3">
-      <widget class="QPushButton" name="pushButton_8">
+      <widget class="QPushButton" name="pushButton_guida">
        <property name="text">
         <string>Guida</string>
        </property>
@@ -548,7 +548,7 @@
       </widget>
      </item>
      <item row="2" column="0">
-      <widget class="QPushButton" name="pushButton_9">
+      <widget class="QPushButton" name="pushButton_customsql">
        <property name="text">
         <string>Comandi SQL manuali</string>
        </property>
@@ -559,15 +559,15 @@
   </layout>
  </widget>
  <tabstops>
-  <tabstop>pushButton_3</tabstop>
-  <tabstop>tableWidget</tabstop>
-  <tabstop>listWidget_2</tabstop>
-  <tabstop>comboBox</tabstop>
+  <tabstop>pushButton_scriviturnisudb</tabstop>
+  <tabstop>tableWidget_tabella</tabstop>
+  <tabstop>listWidget_riepilogo</tabstop>
+  <tabstop>comboBox_dip</tabstop>
  </tabstops>
  <resources/>
  <connections>
   <connection>
-   <sender>pushButton_2</sender>
+   <sender>pushButton_seltabellone</sender>
    <signal>clicked()</signal>
    <receiver>Form</receiver>
    <slot>carica_tabellone()</slot>
@@ -583,7 +583,7 @@
    </hints>
   </connection>
   <connection>
-   <sender>pushButton</sender>
+   <sender>pushButton_seldb</sender>
    <signal>clicked()</signal>
    <receiver>Form</receiver>
    <slot>carica_database()</slot>
@@ -599,7 +599,7 @@
    </hints>
   </connection>
   <connection>
-   <sender>pushButton_3</sender>
+   <sender>pushButton_scriviturnisudb</sender>
    <signal>clicked()</signal>
    <receiver>Form</receiver>
    <slot>inserisci_turni_pulsante()</slot>
@@ -615,7 +615,7 @@
    </hints>
   </connection>
   <connection>
-   <sender>pushButton_4</sender>
+   <sender>pushButton_aggturnsudb</sender>
    <signal>clicked()</signal>
    <receiver>Form</receiver>
    <slot>aggiorna_gui_turni()</slot>
@@ -631,7 +631,7 @@
    </hints>
   </connection>
   <connection>
-   <sender>pushButton_5</sender>
+   <sender>pushButton_modtabella</sender>
    <signal>clicked()</signal>
    <receiver>Form</receiver>
    <slot>modifica_tabella_pulsante()</slot>
@@ -647,7 +647,7 @@
    </hints>
   </connection>
   <connection>
-   <sender>pushButton_6</sender>
+   <sender>pushButton_info</sender>
    <signal>clicked()</signal>
    <receiver>Form</receiver>
    <slot>info_pulsante()</slot>
@@ -663,7 +663,7 @@
    </hints>
   </connection>
   <connection>
-   <sender>pushButton_7</sender>
+   <sender>pushButton_aggtabella</sender>
    <signal>clicked()</signal>
    <receiver>Form</receiver>
    <slot>ricarica_tabella()</slot>
@@ -679,7 +679,7 @@
    </hints>
   </connection>
   <connection>
-   <sender>pushButton_8</sender>
+   <sender>pushButton_guida</sender>
    <signal>clicked()</signal>
    <receiver>Form</receiver>
    <slot>guida_pulsante()</slot>
@@ -711,7 +711,7 @@
    </hints>
   </connection>
   <connection>
-   <sender>pushButton_9</sender>
+   <sender>pushButton_customsql</sender>
    <signal>clicked()</signal>
    <receiver>Form</receiver>
    <slot>comandi_sql_manuali_pulsante()</slot>
@@ -727,7 +727,7 @@
    </hints>
   </connection>
   <connection>
-   <sender>pushButton_10</sender>
+   <sender>pushButton_modsuoneria</sender>
    <signal>clicked()</signal>
    <receiver>Form</receiver>
    <slot>modifica_suoneria_pulsante()</slot>
@@ -743,14 +743,14 @@
    </hints>
   </connection>
   <connection>
-   <sender>pushButton_11</sender>
+   <sender>pushButton_aggsuoneria</sender>
    <signal>clicked()</signal>
    <receiver>Form</receiver>
    <slot>aggiorna_lineedit_suoneria()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>397</x>
-     <y>349</y>
+     <x>552</x>
+     <y>364</y>
     </hint>
     <hint type="destinationlabel">
      <x>410</x>

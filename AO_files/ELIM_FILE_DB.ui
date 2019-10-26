@@ -37,7 +37,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QListWidget" name="listWidget"/>
+      <widget class="QListWidget" name="listWidget_oldfiles"/>
      </item>
     </layout>
    </item>
@@ -57,7 +57,7 @@
       </spacer>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton_2">
+      <widget class="QPushButton" name="pushButton_noneliminare">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
          <horstretch>0</horstretch>
@@ -70,7 +70,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton">
+      <widget class="QPushButton" name="pushButton_eliminatutto">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
          <horstretch>0</horstretch>
@@ -101,7 +101,7 @@
  <resources/>
  <connections>
   <connection>
-   <sender>pushButton_2</sender>
+   <sender>pushButton_noneliminare</sender>
    <signal>clicked()</signal>
    <receiver>Form</receiver>
    <slot>mantieni_files()</slot>
@@ -117,7 +117,7 @@
    </hints>
   </connection>
   <connection>
-   <sender>pushButton</sender>
+   <sender>pushButton_eliminatutto</sender>
    <signal>clicked()</signal>
    <receiver>Form</receiver>
    <slot>elimina_files()</slot>

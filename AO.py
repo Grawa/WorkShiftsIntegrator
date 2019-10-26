@@ -133,15 +133,18 @@ class Tabella:
             return False
 
     def verifica_sveglia(self, turno):
-        """verifica se è attiva la sveglia (DEFAULT ATTIVA)"""
+        """verifica se è attiva la sveglia"""
         try:
-            if turno == self.cerca_nella_tabella(turno)[0][0] and self.cerca_nella_tabella(turno)[0][3] == "NO":
+            tab_sveglia = str(self.cerca_nella_tabella(turno)[0][3]).upper()
+            tab_turno = self.cerca_nella_tabella(turno)[0][0]
+            print(tab_sveglia)
+            if turno == tab_turno and tab_sveglia == "NO":
                 return False
             else:
                 return True
         except Exception as info_errore:
             print(info_errore)
-            return True
+            return True  # valore di default
 
     def cerca_nella_tabella(self, turno):
         """
@@ -348,12 +351,12 @@ class Ui(QWidget):
         except FileNotFoundError:
             print("Errore: File AO_files\\AO.ui non trovato")
             time.sleep(5)
-        self.comboBox.activated[str].connect(self.cambio_nome_dip_combobox)  # collega le variazioni della combobox...
+        self.comboBox_dip.activated[str].connect(self.cambio_nome_dip_combobox)  # collega le variazioni della combobox
         self.ricarica_tabella()
-        self.pushButton_2.setEnabled(False)
-        self.pushButton_3.setEnabled(False)
-        self.pushButton_4.setEnabled(False)
-        self.pushButton_9.setEnabled(False)
+        self.pushButton_seltabellone.setEnabled(False)
+        self.pushButton_scriviturnisudb.setEnabled(False)
+        self.pushButton_aggturnsudb.setEnabled(False)
+        self.pushButton_customsql.setEnabled(False)
         if not os.path.exists(f"{os.environ['HOMEDRIVE']}\\Program Files\\Google\\Drive\\googledrivesync.exe"):
             self.pushButton_drivesync.setText("Google Drive sync non disponibile")
             self.pushButton_drivesync.setEnabled(False)
@@ -391,18 +394,18 @@ class Ui(QWidget):
         try:
             global filetabella1
             filetabella1 = Tabella("AO_files\\Tabella.csv")
-            self.tableWidget.clear()
+            self.tableWidget_tabella.clear()
             for indice, elem in enumerate(filetabella1.elenca_righe()):  # imposta il numero di righe della tabella
-                self.tableWidget.setRowCount(indice + 1)  # aggiunge una riga (mostra TUTTE le righe,inclusa ultima)
-                self.tableWidget.setColumnCount(4)
-                self.tableWidget.setItem(indice, 0, QtWidgets.QTableWidgetItem(elem[0]))
-                self.tableWidget.setItem(indice, 1, QtWidgets.QTableWidgetItem(elem[1]))
-                self.tableWidget.setItem(indice, 2, QtWidgets.QTableWidgetItem(elem[2]))
-                self.tableWidget.setItem(indice, 3, QtWidgets.QTableWidgetItem(elem[3]))
-            self.tableWidget.setHorizontalHeaderLabels(["TURNO", "NOTE", "NOTIFICA", "SVEGLIA"])
-            self.tableWidget.resizeColumnsToContents()  # resize delle colonne tab.turni
-            self.tableWidget.resizeRowsToContents()  # resize delle righe tab.turni
-            self.tableWidget.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)  # adatta la tab.alla finestra
+                self.tableWidget_tabella.setRowCount(indice + 1)  # agg. una riga (mostra TUTTE le righe,inclusa ultima)
+                self.tableWidget_tabella.setColumnCount(4)
+                self.tableWidget_tabella.setItem(indice, 0, QtWidgets.QTableWidgetItem(elem[0]))
+                self.tableWidget_tabella.setItem(indice, 1, QtWidgets.QTableWidgetItem(elem[1]))
+                self.tableWidget_tabella.setItem(indice, 2, QtWidgets.QTableWidgetItem(elem[2]))
+                self.tableWidget_tabella.setItem(indice, 3, QtWidgets.QTableWidgetItem(elem[3]))
+            self.tableWidget_tabella.setHorizontalHeaderLabels(["TURNO", "NOTE", "NOTIFICA", "SVEGLIA"])
+            self.tableWidget_tabella.resizeColumnsToContents()  # resize delle colonne tab.turni
+            self.tableWidget_tabella.resizeRowsToContents()  # resize delle righe tab.turni
+            self.tableWidget_tabella.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)  # adatta la tabella
         except FileNotFoundError:
             print("Errore: File AO_files\\Tabella.csv non trovato")
             time.sleep(5)
@@ -413,12 +416,12 @@ class Ui(QWidget):
             fileturni, _ = QtWidgets.QFileDialog.getOpenFileName(self, 'Seleziona file...', QtCore.QDir.rootPath(),
                                                                  "Excel files (*.xlsx);;ALL files (*.*)")
             fileturni1 = FileTurni(fileturni)
-            self.comboBox.clear()
-            self.comboBox.addItem("Seleziona...")
-            self.comboBox.addItems(fileturni1.elenco_dipendenti())  # aggiunge i dipendenti alla lista
-            self.pushButton_2.setText("Cambia...")
+            self.comboBox_dip.clear()
+            self.comboBox_dip.addItem("Seleziona...")
+            self.comboBox_dip.addItems(fileturni1.elenco_dipendenti())  # aggiunge i dipendenti alla lista
+            self.pushButton_seltabellone.setText("Cambia...")
 
-            self.pushButton_3.setEnabled(True)  # abilita tasto inserisci turni su db
+            self.pushButton_scriviturnisudb.setEnabled(True)  # abilita tasto inserisci turni su db
         except Exception as info_errore:
             print(info_errore)
             QtWidgets.QMessageBox.warning(window, "Errore", "File vuoto o non riconosciuto!")
@@ -427,8 +430,8 @@ class Ui(QWidget):
         try:
             global nome_dip2
             nome_dip2 = str(nome_dip)
-            self.listWidget.clear()
-            self.listWidget.addItems(fileturni1.lista_elementi_in_tabellone(nome_dip))  # aggiunge i turni
+            self.listWidget_turnitabellone.clear()
+            self.listWidget_turnitabellone.addItems(fileturni1.lista_elementi_in_tabellone(nome_dip))  # aggiunge turni
         except Exception as info_errore:
             print(info_errore)
             QtWidgets.QMessageBox.warning(window, "Errore", 'Lista vuota (per iniziare clicca "Seleziona...")'
@@ -452,12 +455,12 @@ class Ui(QWidget):
 
             global filedb1
             filedb1 = DBTurni(str(perc_filedb_fixed))
-            self.listWidget_3.clear()
-            self.listWidget_3.addItems(filedb1.lista_elementi_su_db())
-            self.pushButton.setText("Cambia...")
-            self.pushButton_4.setEnabled(True)  # abilita tasto aggiorna per db
-            self.pushButton_2.setEnabled(True)  # abilita tasto per selezionare db
-            self.pushButton_9.setEnabled(True)  # abilita tasto per selezionare comandi sql manuali
+            self.listWidget_turnidb.clear()
+            self.listWidget_turnidb.addItems(filedb1.lista_elementi_su_db())
+            self.pushButton_seldb.setText("Cambia...")
+            self.pushButton_aggturnsudb.setEnabled(True)  # abilita tasto aggiorna per db
+            self.pushButton_seltabellone.setEnabled(True)  # abilita tasto per selezionare db
+            self.pushButton_customsql.setEnabled(True)  # abilita tasto per selezionare comandi sql manuali
             self._google_drive_run_check()
 
             if window3.aggiorna_finestra():  # aggiorna la finestra e se ci sono file da rimuovere mostra window3
@@ -473,19 +476,19 @@ class Ui(QWidget):
             manager1 = ManagerTurni(nome_dip2, fileturni1, filetabella1, filedb1, perc_suoneria)
             lista_turni, turni_scritti, turni_saltati, errori = manager1.inserisci_tutti_i_turni_su_db()
             self.aggiorna_gui_turni()
-            self.listWidget_2.clear()
-            self.listWidget_2.addItem(f"Turni trovati: {len(lista_turni)}")
-            self.listWidget_2.addItem(f"Turni scritti: {len(turni_scritti)}")
-            self.listWidget_2.addItem(f"Turni saltati(già su db): {len(turni_saltati)}")
-            self.listWidget_2.addItem(f"Turni non in lista(errori): {len(errori)}")
-            self.listWidget_7.clear()
-            self.listWidget_6.clear()
-            self.listWidget_5.clear()
-            self.listWidget_4.clear()
-            self.listWidget_7.addItems(lista_turni)
-            self.listWidget_6.addItems(turni_scritti)
-            self.listWidget_5.addItems(turni_saltati)
-            self.listWidget_4.addItems(errori)
+            self.listWidget_riepilogo.clear()
+            self.listWidget_riepilogo.addItem(f"Turni trovati: {len(lista_turni)}")
+            self.listWidget_riepilogo.addItem(f"Turni scritti: {len(turni_scritti)}")
+            self.listWidget_riepilogo.addItem(f"Turni saltati(già su db): {len(turni_saltati)}")
+            self.listWidget_riepilogo.addItem(f"Turni non in lista(errori): {len(errori)}")
+            self.listWidget_turnitrovati.clear()
+            self.listWidget_turniinseriti.clear()
+            self.listWidget_turnisaltati.clear()
+            self.listWidget_errori.clear()
+            self.listWidget_turnitrovati.addItems(lista_turni)
+            self.listWidget_turniinseriti.addItems(turni_scritti)
+            self.listWidget_turnisaltati.addItems(turni_saltati)
+            self.listWidget_errori.addItems(errori)
             if len(errori) == 0 and len(turni_saltati) == 0 and len(turni_scritti) >= 1:
                 QtWidgets.QMessageBox.information(window, "Info", "Operazione eseguita con successo.\n\n"
                                                           "Ripristina ora il backup sull'app Timetune!")
@@ -505,9 +508,9 @@ class Ui(QWidget):
             QtWidgets.QMessageBox.warning(window, "Errore", "Errore nella scrittura del database!")
 
     def aggiorna_gui_turni(self):
-        self.listWidget_3.clear()
-        self.listWidget_3.addItems(filedb1.lista_elementi_su_db())
-        self.listWidget_3.sortItems()
+        self.listWidget_turnidb.clear()
+        self.listWidget_turnidb.addItems(filedb1.lista_elementi_su_db())
+        self.listWidget_turnidb.sortItems()
 
     @staticmethod
     def modifica_tabella_pulsante():
@@ -607,29 +610,29 @@ class UiComandiSql(QWidget):
             time.sleep(5)
 
     def invio_pulsante(self):
-        comando = self.lineEdit.text()
+        comando = self.lineEdit_querysql.text()
         try:
             risposta = filedb1.comando_sql(str(comando))
             if not any(risposta):
-                self.textBrowser.setText("COMANDO SQL INVIATO (nessuna risposta dal database)")
+                self.textBrowser_oldfiles.setText("COMANDO SQL INVIATO (nessuna risposta dal database)")
             else:
-                self.textBrowser.setText(str(risposta))
+                self.textBrowser_oldfiles.setText(str(risposta))
             window.aggiorna_gui_turni()
         except Exception as info_errore:
             print(info_errore)
-            self.textBrowser.setText(f"COMANDO SQL NON RICONOSCIUTO.")
+            self.textBrowser_oldfiles.setText(f"COMANDO SQL NON RICONOSCIUTO.")
 
     def elimina_pulsante(self):
-        self.lineEdit.setText("DELETE FROM reminders WHERE _id=' ' ")
+        self.lineEdit_querysql.setText("DELETE FROM reminders WHERE _id=' ' ")
 
     def eliminatutti_pulsante(self):
-        self.lineEdit.setText("DELETE FROM reminders ")
+        self.lineEdit_querysql.setText("DELETE FROM reminders ")
 
     def seleziona_pulsante(self):
-        self.lineEdit.setText("SELECT * FROM reminders")
+        self.lineEdit_querysql.setText("SELECT * FROM reminders")
 
     def cerca_pulsante(self):
-        self.lineEdit.setText("SELECT * FROM reminders WHERE reminder_date LIKE '%YYYY-MM-DD%'")
+        self.lineEdit_querysql.setText("SELECT * FROM reminders WHERE reminder_date LIKE '%YYYY-MM-DD%'")
 
 
 class UiEliminaVecchiDB(QWidget):
@@ -648,15 +651,15 @@ class UiEliminaVecchiDB(QWidget):
         :return: Controlla se ci sono file da eliminare ritorna True altrimenti False """
 
         self.lista_file_da_elim = DBTurni.cerca_filedb_da_rimuovere(perc_filedb_fixed)  # Verif.se ci sono file da elim.
-        self.listWidget.clear()
-        self.listWidget.addItems(self.lista_file_da_elim)  # Aggiunge la lista dei file al listWidget
+        self.listWidget_oldfiles.clear()
+        self.listWidget_oldfiles.addItems(self.lista_file_da_elim)  # Aggiunge la lista dei file al listWidget
 
         if self.lista_file_da_elim:  # ritorna True se ci sono file da eliminare altrimenti False
             return True
         else:
             return False
 
-    def mantieni_files(self):  # pulsante NO
+    def mantieni_files(self):  # pulsante no
         self.aggiorna_finestra()
         self.close()
 
