@@ -550,6 +550,8 @@ class Ui(QWidget):
         è Open Source in licenza GNU GPL V3. Utilizza le librerie Qt e altro 
         software (di terze parti) TimeTune per Android e Google drive per windows.
         
+        credit suoneria: https://patrickdearteaga.com
+        
         (c) 2019 Graziano Porcu
         https://github.com/Grawa
         Contatto: VGPLabs@gmail.com
