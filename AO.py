@@ -215,7 +215,7 @@ class DBTurni:
             lista_elem.append(elem + ", " + elem2)
         return lista_elem
 
-    def verifica_presenza_turno_su_db(self, data):                                    # (ex filtrodoppiturni)
+    def verifica_presenza_turno_su_db(self, data):
         """
         verifica per ogni data fornita se il turno è presente nel db
         utile per evitare di duplicare i turni del mese se sono già presenti (anche in parte) nel nuovo Tabellone
@@ -228,7 +228,7 @@ class DBTurni:
         else:
             return False
 
-    def cerca_turno(self, data):                                                              # Funzionalita aggiuntiva
+    def cerca_turno(self, data):
         """
         legge uno o piu turni dal database
         :param data: Data del turno in formato YYYY-MM-DD (es.'2019-07-24')
