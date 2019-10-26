@@ -547,15 +547,17 @@ class Ui(QWidget):
         QtWidgets.QMessageBox.information(window, "Info", """
         Guida:
         
-        1) Importante per il primo utilizzo:
-         Assicurarsi ed eventualmente spostare il file della suoneria sulla 
-           memoria del cellulare (di default è impostato sdcard/Ringtones/suoneria.ogg) 
+        0) Importante per il primo utilizzo:
+            Assicurarsi che il file della suoneria si trovi nel percorso corretto
+            sul dispositivo,altrimenti non potrà suonare la sveglia.
+            Eventualmente copiare o spostare il file della suoneria sul dispositivo...
+            (di default il percorso è sdcard/Ringtones/suoneria.ogg) 
             
-        2) Fare il backup del database da cellulare (consigliato su Google Drive*)...
+        1) Fare il backup del database da cellulare (consigliato su Google Drive*)...
             (app TimeTune>Impostazioni>Backup)
            
            
-        3) Selezionare la cartella dove presente il database del backup*
+        2) Selezionare la cartella dove presente il database del backup*
             (se presenti più file verrà individuato automaticamente il più recente)
             e il file del Tabellone...
             Selezionare quindi il dipendente da inserire.
@@ -566,7 +568,7 @@ class Ui(QWidget):
             eventuali cambi e variazioni di turno eseguite tramite l'app.
             
            
-        4) Ripristinare il database sul cellulare...
+        3) Ripristinare il database sul cellulare...
             (app TimeTune>Impostazioni>Backup)
             
             Nota: In caso di backup su Google Drive**, da pc accertarsi
