@@ -349,9 +349,9 @@ class Ui(QWidget):
     def __init__(self):
         super().__init__()
         try:
-            uic.loadUi("AO_files\\AO.ui", self)
+            uic.loadUi("WSI_files\\WSI.ui", self)
         except FileNotFoundError:
-            print("Errore: File AO_files\\AO.ui non trovato")
+            print("Errore: File WSI_files\\WSI.ui non trovato")
             time.sleep(5)
         self.comboBox_dip.activated[str].connect(self.cambio_nome_dip_combobox)  # collega le variazioni della combobox
         self.ricarica_tabella()
@@ -373,7 +373,7 @@ class Ui(QWidget):
 
     def salva_suoneria_pulsante(self):
         try:
-            with open("AO_files\\cfg_suoneria", "w") as file_perc_suoneria:
+            with open("WSI_files\\cfg_suoneria", "w") as file_perc_suoneria:
                 file_perc_suoneria.write(self.lineEdit_suoneria.text())
             self.aggiorna_lineedit_suoneria()
         except Exception as info_errore:
@@ -381,11 +381,11 @@ class Ui(QWidget):
 
     def aggiorna_lineedit_suoneria(self):
         try:
-            with open("AO_files\\cfg_suoneria") as suoneria:
+            with open("WSI_files\\cfg_suoneria") as suoneria:
                 perc_suoneria = suoneria.read()
             self.lineEdit_suoneria.setText(perc_suoneria)
         except FileNotFoundError:
-            print("Errore: File AO_files\\cfg_suoneria non trovato")
+            print("Errore: File WSI_files\\cfg_suoneria non trovato")
             time.sleep(5)
 
     def default_suoneria_pulsante(self):
@@ -402,7 +402,7 @@ class Ui(QWidget):
     def ricarica_tabella(self):
         try:
             global filetabella1
-            filetabella1 = Tabella("AO_files\\Tabella.csv")
+            filetabella1 = Tabella("WSI_files\\Tabella.csv")
             self.tableWidget_tabella.clear()
             for indice, elem in enumerate(filetabella1.elenca_righe()):  # imposta il numero di righe della tabella
                 self.tableWidget_tabella.setRowCount(indice + 1)  # agg. una riga (mostra TUTTE le righe,inclusa ultima)
@@ -416,7 +416,7 @@ class Ui(QWidget):
             self.tableWidget_tabella.resizeRowsToContents()  # resize delle righe tab.turni
             self.tableWidget_tabella.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)  # adatta la tabella
         except FileNotFoundError:
-            print("Errore: File AO_files\\Tabella.csv non trovato")
+            print("Errore: File WSI_files\\Tabella.csv non trovato")
             time.sleep(5)
 
     def carica_tabellone(self):
@@ -526,9 +526,9 @@ class Ui(QWidget):
     @staticmethod
     def modifica_tabella_pulsante():
         try:
-            os.startfile("AO_files\\Tabella.csv")
+            os.startfile("WSI_files\\Tabella.csv")
         except FileNotFoundError:
-            QtWidgets.QMessageBox.warning(window, "Errore", 'File "AO_files\\Tabella.csv" non trovato')
+            QtWidgets.QMessageBox.warning(window, "Errore", 'File "WSI_files\\Tabella.csv" non trovato')
 
     @staticmethod
     def info_pulsante():
@@ -617,9 +617,9 @@ class UiComandiSql(QWidget):
     def __init__(self):
         super().__init__()
         try:
-            uic.loadUi("AO_files\\CSQL.ui", self)
+            uic.loadUi("WSI_files\\CSQL.ui", self)
         except FileNotFoundError:
-            print("Errore: File AO_files\\CSQL.ui non trovato")
+            print("Errore: File WSI_files\\CSQL.ui non trovato")
             time.sleep(5)
 
     def invio_pulsante(self):
@@ -653,9 +653,9 @@ class UiEliminaVecchiDB(QWidget):
         super().__init__()
         self.lista_file_da_elim = None
         try:
-            uic.loadUi("AO_files\\ELIM_FILE_DB.ui", self)
+            uic.loadUi("WSI_files\\ELIM_FILE_DB.ui", self)
         except FileNotFoundError:
-            print("Errore: AO_files\\ELIM_FILE_DB.ui non trovato")
+            print("Errore: WSI_files\\ELIM_FILE_DB.ui non trovato")
             time.sleep(5)
 
     def aggiorna_finestra(self):

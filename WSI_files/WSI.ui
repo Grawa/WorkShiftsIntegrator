@@ -16,7 +16,7 @@
    </font>
   </property>
   <property name="windowTitle">
-   <string>Automatismi orari</string>
+   <string>Work shifts integrator</string>
   </property>
   <layout class="QGridLayout" name="gridLayout_4">
    <item row="0" column="5">
