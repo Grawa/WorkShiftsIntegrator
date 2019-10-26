@@ -377,8 +377,7 @@ class Ui(QWidget):
             filetabella1 = Tabella("AO_files\\Tabella.csv")
             self.tableWidget.clear()
             for indice, elem in enumerate(filetabella1.elenca_righe()):  # imposta il numero di righe della tabella
-                self.tableWidget.setRowCount(indice + 1)  # aggiunge una riga (fix per mostrare tutti i contenuti)
-            for indice, elem in enumerate(filetabella1.elenca_righe()):  # scrive sulle righe della tabella
+                self.tableWidget.setRowCount(indice + 1)  # aggiunge una riga (mostra TUTTE le righe,inclusa ultima)
                 self.tableWidget.setColumnCount(3)
                 self.tableWidget.setItem(indice, 0, QtWidgets.QTableWidgetItem(elem[0]))
                 self.tableWidget.setItem(indice, 1, QtWidgets.QTableWidgetItem(elem[1]))
@@ -386,8 +385,7 @@ class Ui(QWidget):
             self.tableWidget.setHorizontalHeaderLabels(["TURNO", "NOTE", "NOTIFICA"])
             self.tableWidget.resizeColumnsToContents()  # resize delle colonne tab.turni
             self.tableWidget.resizeRowsToContents()  # resize delle righe tab.turni
-            self.tableWidget.horizontalHeader().setSectionResizeMode(
-                QHeaderView.Stretch)  # adatta tab.turni alla finestra
+            self.tableWidget.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)  # adatta la tab.alla finestra
         except FileNotFoundError:
             print("Errore: File AO_files\\Tabella.csv non trovato")
             time.sleep(5)
