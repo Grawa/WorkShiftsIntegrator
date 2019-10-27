@@ -8,4 +8,5 @@ echo.
 
 py WSI.py
 
-pause>nul
+TIMEOUT 10
+EXIT
