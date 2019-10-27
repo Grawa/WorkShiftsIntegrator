@@ -331,7 +331,7 @@ class ManagerTurni:
                 sveglia = self.filetabella.verifica_sveglia(turno)  # controlla sveglia
                 self.dbturnimensile.scrivi_turno(data, note, notifica, parcheggio, self.perc_suoneria, sveglia)
                 turni_scritti.append(f"{data}, {turno}")                             # aggiunge i turni scritti
-                if sveglia is True:
+                if sveglia is False:
                     turni_senza_sveglia.append(f"{data}, {turno}")
             else:
                 turni_saltati.append(f"{data}, {turno}")                             # indica eventuali turni saltati
