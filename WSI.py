@@ -340,7 +340,7 @@ class ManagerTurni:
         for data, turno in dizturni.items():
             lista_turni.append(f"{data}, {turno}")
 
-        self.dbturnimensile.ottimizza_db()                                           # elimina vecchi turni sul database
+        self.dbturnimensile.ottimizza_db()                                           # elimina vecchi turni sul db
 
         return lista_turni, turni_scritti, turni_saltati, errori, turni_senza_sveglia
 
