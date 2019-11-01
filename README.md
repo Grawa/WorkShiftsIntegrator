@@ -1,4 +1,5 @@
 # Work Shifts Integrator
+
 Il programma aggiunge dei turni di lavoro ad un database dell'app (di terze parti) Timetune per Android.
 
 ## Funzionalità:
