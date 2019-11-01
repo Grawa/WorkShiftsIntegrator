@@ -14,12 +14,12 @@ Il programma aggiunge dei turni di lavoro ad un database dell'app (di terze part
 - Comandi SQL manuali per il database
 
 ## Installazione
-Su windows 10 (ez install):
-- Installare Python 3.8
-- Avviare "Installa moduli aggiuntivi.cmd"
-- Avviare "Avvia WSI.cmd"
+Su windows 10 (ez):
+1. Installare Python 3.8
+2. Avviare "Installa moduli aggiuntivi.cmd"
+3. Avviare "Avvia WSI.cmd"
 
-Nota: E' necessario che la cartella AO_files sia nella stessa directory del file (AO.py)
+Nota: E' necessario che la cartella AO_files sia nella stessa directory del file AO.py
 ##
 Il programma è testato e funzionante su python 3.7 e 3.8 su windows 10. Richiede solo questi moduli aggiuntivi:
 ```shell
