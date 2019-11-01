@@ -1,7 +1,7 @@
 # Work Shifts Integrator
-[!alt text](https://raw.githubusercontent.com/Grawa/WorkShiftsIntegrator/master/Immagini/wsi_demo.png)
-
 Il programma aggiunge dei turni di lavoro ad un database dell'app (di terze parti) Timetune per Android.
+![wsi](https://github.com/Grawa/WorkShiftsIntegrator/blob/master/Immagini/wsi_demo.png)
+
 
 ## Funzionalità:
 - Visualizzazione dei turni
