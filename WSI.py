@@ -1,14 +1,15 @@
 import openpyxl
 import csv
 import sqlite3
-from datetime import datetime
+from datetime import datetime, timedelta
 import calendar
 from PyQt5.QtWidgets import QApplication, QWidget, QHeaderView
-from PyQt5 import uic, QtWidgets, QtCore
+from PyQt5 import uic, QtWidgets
 import os
 import time
 import subprocess
 import glob
+import hashlib
 
 
 class FileTurni:
@@ -39,21 +40,34 @@ class FileTurni:
     def _lista_elementi_in_colonna(self, tipo):                      # metodo ad uso interno alla classe
         """
         elenca gli elementi in una colonna (non in riga come per il metodo .turni_mensili)
-        :param tipo: Altamente raccomandato scegliere tra Nominativo, Contratto, Modulo e Skill
+        :param tipo: raccomandato scegliere tra Nominativo, Contratto, Modulo e Skill
         :return: ritorna una lista degli elementi in colonna
         """
         tipo = tipo.capitalize()                                    # controlla le maiuscole
         fileturni = openpyxl.load_workbook(self.tabellone)          # file excel dei turni - es. Tabellone.xlsx
         foglio = fileturni.active                                   # individua il foglio principale
         listaelem = []
-        for colonna in foglio.iter_cols():                          # restituisce una tupla per ogni riga del tabellone
-            for cella in colonna:                                   # spacchetta le celle nella riga
+        for colonna in foglio.iter_cols():
+            for cella in colonna:
                 if cella.value == tipo:                             # confronta ogni cella con variabile "tipo"
                     for cella2 in colonna:
                         if "None" not in str(cella2.value):          # filtra i valori nulli (None)
                             if tipo not in str(cella2.value):        # evita di aggiungere il tipo di valore cercato
                                 listaelem.append(cella2.value)       # aggiunge alla lista
         return listaelem
+
+    def date(self):
+        """elenca le date"""
+        fileturni = openpyxl.load_workbook(self.tabellone)       # file excel dei turni - es. Tabellone.xlsx
+        foglio = fileturni.active                                # individua il foglio principale
+        lista_date_dt = []
+        for riga in foglio.iter_rows(1, 1):                 # individua la prima riga (rest.una tupla)
+            for cella in riga:                              # rest. le singole celle
+                try:
+                    lista_date_dt.append(datetime.strptime(str(cella.value), "%Y-%m-%d 00:00:00"))
+                except ValueError:
+                    pass
+        return lista_date_dt
 
     def lista_elementi_in_tabellone(self, dipendente):
         """crea una lista con data e turno (es. '2019-10-07, 08:30-14:30',...)"""
@@ -99,6 +113,49 @@ class FileTurni:
             return str(" ! No parcheggio")                             # stringa in caso non ci sia parcheggio
         else:
             return str("")                                             # stringa in caso ci sia parcheggio
+
+    @staticmethod
+    def cerca_tabelloni_old_new(directory):
+        """cerca i 2 file piu recenti nella directory fornita,senza tener conto dei doppioni"""
+        # ELENCA TUTTI I FILE NELLA DIRECTORY DEL FILE SELEZIONATO
+        listafiledir = glob.glob(directory + "//*")             # elenca in una lista i file presenti nella directory
+
+        # ELENCA SOLO I FILE (no cartelle) CONTENENTI "Tabellone" con estensione .xslx
+        tabelloni = []
+        for filex in listafiledir:
+            if os.path.isfile(filex):  # controlla che siano file e non cartelle
+                if "Tabellone" in filex:  # controlla che ci sia "Tabellone"
+                    if str(filex).endswith(".xlsx"):  # controlla estensione .xslx
+                        tabelloni.append(filex)
+
+        files = sorted(tabelloni, key=os.path.getmtime)  # restituisce i file piu recenti
+
+        def hash_file(path, blocksize=65536):  # generatore md5
+            with open(path, 'rb') as afile:
+                hasher = hashlib.md5()
+                buf = afile.read(blocksize)
+                while len(buf) > 0:
+                    hasher.update(buf)
+                    buf = afile.read(blocksize)
+                return hasher.hexdigest()
+
+        # CREA UNA LISTA DEI FILE DAL PIU VECCHIO AL PIU RECENTE SENZA TENERE CONTO DEI DUPLICATI(MD5 checksum)
+        listahash = []
+        listafile_nd = []
+        for file in files:
+            md5file = hash_file(file)
+            if hash_file(file) not in listahash:
+                listahash.append(md5file)
+                listafile_nd.append(file)
+
+        try:
+            old = listafile_nd[-2]
+        except IndexError:
+            old = None
+
+        new = listafile_nd[-1]
+
+        return old, new
 
 
 class Tabella:
@@ -263,6 +320,8 @@ class DBTurni:
             if file != file_nuovo:                       # tranne quello piu recente
                 file_vecchi.append(file)
 
+        print("Eventuali file database vecchi: ", file_vecchi)
+
         if file_vecchi:
             return file_vecchi
         else:
@@ -284,6 +343,7 @@ class DBTurni:
 
         # CERCA IL FILE PIU RECENTE
         file_nuovo = max(filestt, key=os.path.getctime)  # restituisce il piu recente
+        print("File database piu recente selezionato: ", file_nuovo)
         return file_nuovo
 
 
@@ -292,13 +352,15 @@ class ManagerTurni:
     gestisce le operazioni sui turni (li inserisce su db,esegue i cambi turno e altre funzioni di alto livello)
     :param dipendente: stringa con COGNOME e NOME del dipendente (es. mario rossi)
     :param fileturni: istanza di FileTurni
+    :param fileturni_old: istanza di FileTurni oppure None
     :param filetabella: istanza di FileTurni
     :param dbturnimensile: istanza di DBTurni
     :param perc_suoneria: percorso del file suoneria per la notifica
     """
-    def __init__(self, dipendente, fileturni, filetabella, dbturnimensile, perc_suoneria):
+    def __init__(self, dipendente, fileturni, fileturni_old, filetabella, dbturnimensile, perc_suoneria):
         self.dipendente = str(dipendente)
         self.fileturni = fileturni
+        self.fileturni_old = fileturni_old
         self.filetabella = filetabella
         self.dbturnimensile = dbturnimensile
         self.perc_suoneria = perc_suoneria
@@ -318,23 +380,37 @@ class ManagerTurni:
         turni_saltati = []
         turni_senza_sveglia = []
 
+        if self.fileturni_old is None:  # se il file dei "vecchi turni" non è definito
+            data_iniz_dt = datetime(datetime.now().year, 1, 1)  # default data di inizio scrittura turni 1-1-YYYY
+            print("fileturni_old non definito")
+        else:
+            date = self.fileturni_old.date()
+            ultima_data_mese = max(date)
+            data_iniz_dt = ultima_data_mese + timedelta(days=1)  # data inizio turni (ultima data mese + 1)
+
+        print("Scrittura nuovi turni a partire da: ", data_iniz_dt.date())
+
         for data, turno in dizturni.items():                                         # restituisce data e turno singoli
-            if self.filetabella.verifica_presenza_turno_su_tabella(turno) is False:  # c.errori: in caso di nuovi turni
-                errori.append(f"{data}, {turno}")
+            data_attuale_dt = datetime.strptime(data, "%Y-%m-%d")
+            if data_attuale_dt >= data_iniz_dt:                     # SCRIVE LE DATE SOLO A PARTIRE da inizio mese...
 
-            elif self.dbturnimensile.verifica_presenza_turno_su_db(data) is False:   # controlla se la data è già nel db
-                turno_da_scrivere = self.filetabella.cerca_nella_tabella(turno)
-                note = turno_da_scrivere[0][1]
-                notifica = turno_da_scrivere[0][2]
-                parcheggio = self.fileturni.verifica_parcheggio(data, turno)
+                if self.filetabella.verifica_presenza_turno_su_tabella(turno) is False:  # errori in caso di nuovi turni
+                    errori.append(f"{data}, {turno}")
 
-                sveglia = self.filetabella.verifica_sveglia(turno)  # controlla sveglia
-                self.dbturnimensile.scrivi_turno(data, note, notifica, parcheggio, self.perc_suoneria, sveglia)
-                turni_scritti.append(f"{data}, {turno}")                             # aggiunge i turni scritti
-                if sveglia is False:
-                    turni_senza_sveglia.append(f"{data}, {turno}")
-            else:
-                turni_saltati.append(f"{data}, {turno}")                             # indica eventuali turni saltati
+                elif self.dbturnimensile.verifica_presenza_turno_su_db(
+                        data) is False:  # controlla se la data è già nel db
+                    turno_da_scrivere = self.filetabella.cerca_nella_tabella(turno)
+                    note = turno_da_scrivere[0][1]
+                    notifica = turno_da_scrivere[0][2]
+                    parcheggio = self.fileturni.verifica_parcheggio(data, turno)
+
+                    sveglia = self.filetabella.verifica_sveglia(turno)  # controlla sveglia
+                    self.dbturnimensile.scrivi_turno(data, note, notifica, parcheggio, self.perc_suoneria, sveglia)
+                    turni_scritti.append(f"{data}, {turno}")  # aggiunge i turni scritti
+                    if sveglia is False:
+                        turni_senza_sveglia.append(f"{data}, {turno}")
+                else:
+                    turni_saltati.append(f"{data}, {turno}")  # indica eventuali turni saltati
 
         lista_turni = []
         for data, turno in dizturni.items():
@@ -370,6 +446,7 @@ class Ui(QWidget):
     nome_dip2 = None
     perc_filedb_fixed = None
     filedb1 = None
+    fileturni_old1 = None
 
     def salva_suoneria_pulsante(self):
         try:
@@ -421,10 +498,33 @@ class Ui(QWidget):
 
     def carica_tabellone(self):
         try:
+            perc_cart_filetab = QtWidgets.QFileDialog.getExistingDirectory(window, 'Seleziona cartella...')
+            fileturni_old, fileturni_new = FileTurni.cerca_tabelloni_old_new(perc_cart_filetab)
+
             global fileturni1
-            fileturni, _ = QtWidgets.QFileDialog.getOpenFileName(self, 'Seleziona file...', QtCore.QDir.rootPath(),
-                                                                 "Excel files (*.xlsx);;ALL files (*.*)")
-            fileturni1 = FileTurni(fileturni)
+            fileturni1 = FileTurni(fileturni_new)
+
+            global fileturni_old1
+            if fileturni_old is None:
+                QtWidgets.QMessageBox.warning(window, "Nota", """File Tabellone del mese/periodo scorso non trovato!\n
+                Data inizio scrittura turni: (default YYYY-01-01)
+                
+                Se il periodo scorso include date presenti in quello
+                attuale e sono stati fatti cambi riposo o variazioni
+                simili alcuni turni possono aggiungersi per errore
+                al posto dei giorni liberi.
+                
+                Evita questo errore aggiungendo alla cartella 
+                selezionata il file Tabellone del periodo 
+                precedente/mese scorso""")
+
+                fileturni_old1 = None
+            else:
+                fileturni_old1 = FileTurni(fileturni_old)
+
+            print("file turni mese/periodo scorso:", fileturni_old)
+            print("file turni mese/periodo attuale:", fileturni_new)
+
             self.comboBox_dip.clear()
             self.comboBox_dip.addItem("Seleziona...")
             self.comboBox_dip.addItems(fileturni1.elenco_dipendenti())  # aggiunge i dipendenti alla lista
@@ -433,7 +533,7 @@ class Ui(QWidget):
             self.pushButton_scriviturnisudb.setEnabled(True)  # abilita tasto inserisci turni su db
         except Exception as info_errore:
             print(info_errore)
-            QtWidgets.QMessageBox.warning(window, "Errore", "File vuoto o non riconosciuto!")
+            QtWidgets.QMessageBox.warning(window, "Errore", "Nessuna cartella selezionata o file non riconosciuto!")
 
     def cambio_nome_dip_combobox(self, nome_dip):
         try:
@@ -484,7 +584,7 @@ class Ui(QWidget):
             self.salva_suoneria_pulsante()
             self.aggiorna_lineedit_suoneria()
             perc_suoneria = self.lineEdit_suoneria.text()
-            manager1 = ManagerTurni(nome_dip2, fileturni1, filetabella1, filedb1, perc_suoneria)
+            manager1 = ManagerTurni(nome_dip2, fileturni1, fileturni_old1, filetabella1, filedb1, perc_suoneria)
             lista_turni, turni_scritti, turni_saltati, errori, senza_sveg = manager1.inserisci_tutti_i_turni_su_db()
             self.aggiorna_gui_turni()
             self.listWidget_riepilogo.clear()
@@ -545,12 +645,12 @@ class Ui(QWidget):
         mancanza di parcheggio in caso di pulizie stradali
         (Secondo lunedì del mese con inizio turno entro le 11:00)
         
-        Versione: 1.0
+
         Il programma viene fornito senza alcuna garanzia,
         è Open Source in licenza GNU GPL V3. Utilizza le librerie Qt e altro 
         software (di terze parti) TimeTune per Android e Google drive per windows.
         
-        credit suoneria: https://patrickdearteaga.com
+        Ringtone credits: https://patrickdearteaga.com
         
         (c) 2019 Graziano Porcu
         https://github.com/Grawa
@@ -562,45 +662,54 @@ class Ui(QWidget):
         QtWidgets.QMessageBox.information(window, "Info", """
         Guida:
         
-        0) Importante per il primo utilizzo:
-            Assicurarsi che il file della suoneria si trovi nel percorso corretto
-            sul dispositivo,altrimenti non potrà suonare la sveglia.
-            Eventualmente copiare o spostare il file della suoneria sul dispositivo...
-            (di default il percorso è sdcard/Ringtones/suoneria.ogg) 
-            
+        0) Importante: solo per il primo utilizzo!
+            Assicurarsi che il file della suoneria si trovi nel percorso e cartella 
+            corretti sul dispositivo android (compatibile con android 6.0 o superiore).
+            Impostare il percorso manualmente o copiare la cartella "Ringtones"
+            sulla sdcard del dispositivo... (sdcard/Ringtones/suoneria.ogg)  
+    
             
         1) Fare il backup del database da cellulare (consigliato su Google Drive*)...
             (app TimeTune>Impostazioni>Backup)
-           
-           
-        2) Selezionare la cartella dove presente il database del backup*
-            (se presenti più file verrà individuato automaticamente il più recente)
-            e il file del Tabellone...
-            Selezionare quindi il dipendente da inserire.
-            Cliccare quindi su "Inserisci turni su database".
-           
-            Nota: è importante creare sempre il backup del database aggiornato 
+            E' importante creare sempre il backup del database aggiornato 
             prima di scrivere i turni nuovi, in alternativa si perderanno 
             eventuali cambi e variazioni di turno eseguite tramite l'app.
-            
            
-        3) Ripristinare il database sul cellulare...
+        2) Selezionare la cartella dove presente il database del backup**
+            (verrà individuato automaticamente il più recente)
+            
+        3) Selezionare la cartella dove presenti i file del Tabellone**
+        (verranno individuati il più recente e quello del periodo precedente)
+            
+        4) Selezionare il dipendente da inserire
+        
+        5) Cliccare infine su "Inserisci turni su database"
+           
+        6) Ripristinare il database sul cellulare...
             (app TimeTune>Impostazioni>Backup)
             
             Nota: In caso di backup su Google Drive**, da pc accertarsi
             che il backup sia stato caricato correttamente da pc e sul
             cellulare di scaricare la copia aggiornata del file.
-            
         ---
         
         Note:
         
-        *Non rinominare il file di backup: per essere riconosciuto  
-        automaticamente deve contenere la parola "Timetune Backup"
+        *Integrazione con google drive sync disponibile per PC Windows.
+        Download: https://www.google.com/drive/download/
+        
+        **Non rinominare il file di backup e il tabellone dei turni:   
+        per essere riconosciuti automaticamente devono contenere 
+        rispettivamente la parola "Timetune Backup" e
+        la parola "Tabellone".
+          
+        I file Tabellone non devono essere originali (non 
+        modificati esternamente) altrimenti il sistema potrebbe 
+        non riconoscere quello più recente dal meno recente.  
+        Stessa regola vale anche per i file database.
+        """)
 
-        **Integrazione con google drive sync disponibile per PC Windows.
-          Download: https://www.google.com/drive/download/
-            """)
+
 
     @staticmethod
     def googledrivesync_pulsante():

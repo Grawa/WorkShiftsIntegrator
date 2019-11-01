@@ -314,7 +314,7 @@
           </font>
          </property>
          <property name="text">
-          <string>Tabellone:</string>
+          <string>Tabelloni (ultimi 2 periodi/mesi):</string>
          </property>
         </widget>
        </item>
@@ -327,7 +327,7 @@
           </sizepolicy>
          </property>
          <property name="text">
-          <string>Seleziona file...</string>
+          <string>Seleziona cartella...</string>
          </property>
         </widget>
        </item>
