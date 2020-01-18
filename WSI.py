@@ -280,22 +280,13 @@ class DBTurni:
         verifica per ogni data fornita se il turno è presente nel db
         utile per evitare di duplicare i turni del mese se sono già presenti (anche in parte) nel nuovo Tabellone
 
-        :param data: Data del turno in formato YYYY-MM-DD (es.'20190724')  # fixme modifica tutti i formati data nelle informazioni delle classi
+        :param data: Data del turno in formato YYYY-MM-DD (es.'20190724')
         :return: se presente nel database restituisce True,altrimenti False
         """
         if data in self._leggi_date_su_db():
             return True
         else:
             return False
-
-    def cerca_turno(self, data): # fixme classe inutilizzata?
-        """
-        legge uno o piu turni dal database
-        :param data: Data del turno in formato YYYY-MM-DD (es.'20190724')
-        :return: restituisce una lista con dentro una o piu tuple per la data richiesta(normalmente una tupla)
-        """
-        f = self.comando_sql(f'SELECT events_start_date,events_title FROM events WHERE events_start_date LIKE "%{data}%";')  #fixme li duplica premendo piu volte il pulsante ins.turni
-        return f
 
     @staticmethod
     def cerca_filedb_da_rimuovere(perc_filedb):
@@ -400,8 +391,7 @@ class ManagerTurni:
                 if self.filetabella.verifica_presenza_turno_su_tabella(turno) is False:  # errori in caso di nuovi turni
                     errori.append(f"{data}, {turno}")
 
-                elif self.dbturnimensile.verifica_presenza_turno_su_db(
-                        data) is False:  # controlla se la data è già nel db
+                elif self.dbturnimensile.verifica_presenza_turno_su_db(data_attuale_dt.strftime("%Y%m%d")) is False:  # controlla se la data è già nel db
                     turno_da_scrivere = self.filetabella.cerca_nella_tabella(turno)
                     note = turno_da_scrivere[0][1]
                     notifica = str(turno_da_scrivere[0][2])
