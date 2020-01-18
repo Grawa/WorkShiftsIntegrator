@@ -230,9 +230,9 @@ class DBTurni:
 
     def ottimizza_db(self):
         """ottimizza il database: elimina i vecchi turni inattivi"""
-        return self.comando_sql("DELETE FROM reminders WHERE reminder_active='0';")
+        return self.comando_sql("DELETE FROM reminders WHERE reminder_active='0';") #fixme da sistemare se fattibile dopo fix data fineturno
 
-    def scrivi_turno(self, data, note, ora_notifica, parcheggio, perc_suoneria, sveglia):
+    def scrivi_turno(self, turno, data, note, ora_notifica, parcheggio, perc_suoneria, sveglia):
         """
         Aggiunge un turno di lavoro al database
         :param data: Data del turno in formato YYYY-MM-DD (es.'20190724')
@@ -241,10 +241,13 @@ class DBTurni:
         :param parcheggio: Aggiunge nota su disponibilità parcheggio (es.' ! No parcheggio')
         :param perc_suoneria: Aggiunge il percorso su memoria disp. android della suoneria della notifica
         :param sveglia: Tipo booleano,si intende sveglia attiva? True/False
+        :param turno: data fine turno (es. 16:00-22:00)
         :return: restituisce la risposta o i dati dal database
         """
 
-        data_finet = 205001171815  # fixme da aggiungere data fineturno e modificare formato sveglia es202001171150
+        oraft = str(turno[-5:])  # ricava da turno l'ora di fine turno
+        oraft_f = oraft.replace(":", "")
+        data_finet = data+oraft_f  # unisce data e ora per fine turno
 
         if sveglia is True:
             f = self.comando_sql(f"INSERT INTO events VALUES (NULL, 0, '{data}{ora_notifica}', '{data_finet}', 0, '{note} {parcheggio}', '', 0, 12, 330, 0, 1, 0, 0, 0, 0, 0, NULL, 0);")
@@ -399,7 +402,7 @@ class ManagerTurni:
                     parcheggio = self.fileturni.verifica_parcheggio(data, turno)
 
                     sveglia = self.filetabella.verifica_sveglia(turno)  # controlla sveglia
-                    self.dbturnimensile.scrivi_turno(data_attuale_dt.strftime("%Y%m%d"), note, notifica, parcheggio, self.perc_suoneria, sveglia)
+                    self.dbturnimensile.scrivi_turno(turno, data_attuale_dt.strftime("%Y%m%d"), note, notifica, parcheggio, self.perc_suoneria, sveglia)
                     turni_scritti.append(f"{data}, {turno}")  # aggiunge i turni scritti
                     if sveglia is False:
                         turni_senza_sveglia.append(f"{data}, {turno}")
