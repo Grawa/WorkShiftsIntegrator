@@ -230,7 +230,7 @@ class DBTurni:
 
     def ottimizza_db(self):
         """ottimizza il database: elimina i vecchi turni inattivi"""
-        return self.comando_sql("DELETE FROM reminders WHERE reminder_active='0';") #fixme da sistemare se fattibile dopo fix data fineturno
+        return self.comando_sql("DELETE FROM reminders WHERE reminder_active='0';") #fixme crea un sistema per rimuovere i vecchi turni -vari db istances,events_notifications,events
 
     def scrivi_turno(self, turno, data, note, ora_notifica, parcheggio, perc_suoneria, sveglia):
         """
@@ -649,7 +649,7 @@ class Ui(QWidget):
         
         Ringtone credits: https://patrickdearteaga.com
         
-        (c) 2019 Graziano Porcu
+        (c) 2020 Graziano Porcu
         https://github.com/Grawa
         Contatto: VGPLabs@gmail.com
         """)
