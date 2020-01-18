@@ -235,38 +235,41 @@ class DBTurni:
     def scrivi_turno(self, data, note, ora_notifica, parcheggio, perc_suoneria, sveglia):
         """
         Aggiunge un turno di lavoro al database
-        :param data: Data del turno in formato YYYY-MM-DD (es.'2019-07-24')
+        :param data: Data del turno in formato YYYY-MM-DD (es.'20190724')
         :param note: Note sul turno
-        :param ora_notifica: orario di notifica in formato HH:MM (es. '15:25')
+        :param ora_notifica: orario di notifica in formato HH:MM (es. '1525')
         :param parcheggio: Aggiunge nota su disponibilità parcheggio (es.' ! No parcheggio')
         :param perc_suoneria: Aggiunge il percorso su memoria disp. android della suoneria della notifica
         :param sveglia: Tipo booleano,si intende sveglia attiva? True/False
         :return: restituisce la risposta o i dati dal database
         """
-        if sveglia is True:
-            f = self.comando_sql(f"INSERT INTO reminders VALUES(NULL,'{note} {parcheggio}','{data} {ora_notifica}'"
-                                 f",'1','0','0','0','0','11','','0','1','0','0','0','0','0','','0','1',"
-                                 f"'{perc_suoneria}','1','5','1','1','0');")  # con sveglia
-        else:
-            f = self.comando_sql(f"INSERT INTO reminders VALUES(NULL,'{note} {parcheggio}','{data} {ora_notifica}'"
-                                 f",'1','0','0','0','12','11','','0','1','0','0','0','0','0','','0','0',"
-                                 f"'{perc_suoneria}','0','5','1','0','0');")  # no sveglia
 
-        return f
+        data_finet = 205001171815  # fixme da aggiungere data fineturno e modificare formato sveglia es202001171150
+
+        if sveglia is True:
+            f = self.comando_sql(f"INSERT INTO events VALUES (NULL, 0, '{data}{ora_notifica}', '{data_finet}', 0, '{note} {parcheggio}', '', 0, 12, 330, 0, 1, 0, 0, 0, 0, 0, NULL, 0);")
+            ultimo_id_inserito = self.comando_sql(f"SELECT seq FROM sqlite_sequence WHERE name='events'")  # chiede l'ultimo _id per aggiungere successivamente la suoneria su event_notifications
+            ultimo_id_inserito_f = (ultimo_id_inserito.pop()[0])  # scompatta l'id
+            f2 = self.comando_sql(f"INSERT INTO event_notifications VALUES (NULL, {ultimo_id_inserito_f}, 0, 0, 0, '', 1, '{perc_suoneria}', 1, 2, 0, 0, 1)")  # inserisce la sveglia
+
+        else:
+            f = self.comando_sql(f"INSERT INTO events VALUES (NULL, 0, '{data}{ora_notifica}', '{data_finet}', 0, '{note} {parcheggio}', '', 0, 12, 330, 0, 1, 0, 0, 0, 0, 0, NULL, 0);")
+            f2 = "no_sveglia"
+        return f, f2
 
     def _leggi_date_su_db(self):
         """ legge le date dal database e restituisce una lista """
-        lista_reminder_date = self.comando_sql("SELECT reminder_date FROM reminders")
+        lista_reminder_date = self.comando_sql("SELECT events_start_date FROM events")
         lista_date = []
         for elem in lista_reminder_date:
             data = elem[0]                                      # ottiene il primo elemento dalla lista_reminder_date
-            data_format = datetime.strptime(data, "%Y-%m-%d %H:%M").strftime("%Y-%m-%d")
+            data_format = datetime.strptime(data, "%Y%m%d%H%M").strftime("%Y%m%d")
             lista_date.append(data_format)
         return lista_date
 
     def lista_elementi_su_db(self):
         """ legge le date dal database e restituisce una lista """
-        elem_su_db = self.comando_sql("SELECT reminder_date,reminder_name FROM reminders")
+        elem_su_db = self.comando_sql("SELECT events_start_date,events_title FROM events")
         lista_elem = []
         for elem, elem2 in elem_su_db:
             lista_elem.append(elem + ", " + elem2)
@@ -277,7 +280,7 @@ class DBTurni:
         verifica per ogni data fornita se il turno è presente nel db
         utile per evitare di duplicare i turni del mese se sono già presenti (anche in parte) nel nuovo Tabellone
 
-        :param data: Data del turno in formato YYYY-MM-DD (es.'2019-07-24')
+        :param data: Data del turno in formato YYYY-MM-DD (es.'20190724')  # fixme modifica tutti i formati data nelle informazioni delle classi
         :return: se presente nel database restituisce True,altrimenti False
         """
         if data in self._leggi_date_su_db():
@@ -285,13 +288,13 @@ class DBTurni:
         else:
             return False
 
-    def cerca_turno(self, data):
+    def cerca_turno(self, data): # fixme classe inutilizzata?
         """
         legge uno o piu turni dal database
-        :param data: Data del turno in formato YYYY-MM-DD (es.'2019-07-24')
+        :param data: Data del turno in formato YYYY-MM-DD (es.'20190724')
         :return: restituisce una lista con dentro una o piu tuple per la data richiesta(normalmente una tupla)
         """
-        f = self.comando_sql(f'SELECT reminder_date,reminder_name FROM reminders WHERE reminder_date LIKE "%{data}%";')
+        f = self.comando_sql(f'SELECT events_start_date,events_title FROM events WHERE events_start_date LIKE "%{data}%";')  #fixme li duplica premendo piu volte il pulsante ins.turni
         return f
 
     @staticmethod
@@ -401,11 +404,12 @@ class ManagerTurni:
                         data) is False:  # controlla se la data è già nel db
                     turno_da_scrivere = self.filetabella.cerca_nella_tabella(turno)
                     note = turno_da_scrivere[0][1]
-                    notifica = turno_da_scrivere[0][2]
+                    notifica = str(turno_da_scrivere[0][2])
+                    notifica = notifica.replace(":", "")
                     parcheggio = self.fileturni.verifica_parcheggio(data, turno)
 
                     sveglia = self.filetabella.verifica_sveglia(turno)  # controlla sveglia
-                    self.dbturnimensile.scrivi_turno(data, note, notifica, parcheggio, self.perc_suoneria, sveglia)
+                    self.dbturnimensile.scrivi_turno(data_attuale_dt.strftime("%Y%m%d"), note, notifica, parcheggio, self.perc_suoneria, sveglia)
                     turni_scritti.append(f"{data}, {turno}")  # aggiunge i turni scritti
                     if sveglia is False:
                         turni_senza_sveglia.append(f"{data}, {turno}")
@@ -466,7 +470,7 @@ class Ui(QWidget):
             time.sleep(5)
 
     def default_suoneria_pulsante(self):
-        self.lineEdit_suoneria.setText("file:///storage/emulated/0/Ringtones/suoneria.ogg")
+        self.lineEdit_suoneria.setText("content://com.android.externalstorage.documents/document/primary%3ARingtones%2Fsuoneria.ogg")  # la codifica è in UTF-8 dopo "primary"
 
     def _google_drive_run_check(self):
         listatask = subprocess.check_output("tasklist")
@@ -709,8 +713,6 @@ class Ui(QWidget):
         Stessa regola vale anche per i file database.
         """)
 
-
-
     @staticmethod
     def googledrivesync_pulsante():
         os.startfile(f"{os.environ['HOMEDRIVE']}\\Program Files\\Google\\Drive\\googledrivesync.exe")
@@ -745,16 +747,16 @@ class UiComandiSql(QWidget):
             self.textBrowser_oldfiles.setText(f"COMANDO SQL NON RICONOSCIUTO.")
 
     def elimina_pulsante(self):
-        self.lineEdit_querysql.setText("DELETE FROM reminders WHERE _id=' ' ")
+        self.lineEdit_querysql.setText("DELETE FROM events WHERE _id=' ' ")
 
     def eliminatutti_pulsante(self):
-        self.lineEdit_querysql.setText("DELETE FROM reminders ")
+        self.lineEdit_querysql.setText("DELETE FROM events ")
 
     def seleziona_pulsante(self):
-        self.lineEdit_querysql.setText("SELECT * FROM reminders")
+        self.lineEdit_querysql.setText("SELECT * FROM events")
 
     def cerca_pulsante(self):
-        self.lineEdit_querysql.setText("SELECT * FROM reminders WHERE reminder_date LIKE '%YYYY-MM-DD%'")
+        self.lineEdit_querysql.setText("SELECT * FROM events WHERE events_start_date LIKE '%YYYYMMDD%'")
 
 
 class UiEliminaVecchiDB(QWidget):

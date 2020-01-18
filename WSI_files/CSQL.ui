@@ -58,7 +58,7 @@
        <item row="1" column="1">
         <widget class="QPushButton" name="pushButton_elimina">
          <property name="text">
-          <string>Elimina reminder...</string>
+          <string>Elimina evento...</string>
          </property>
         </widget>
        </item>
@@ -72,7 +72,7 @@
        <item row="1" column="0">
         <widget class="QPushButton" name="pushButton_eliminatutti">
          <property name="text">
-          <string>Elimina tutti i reminder</string>
+          <string>Elimina tutti gli eventi</string>
          </property>
         </widget>
        </item>
