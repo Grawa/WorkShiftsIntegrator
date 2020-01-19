@@ -116,9 +116,15 @@ class FileTurni:
 
     @staticmethod
     def cerca_tabelloni_old_new(directory):
+
+        def data_modifica_fExel(file_excel):  # Ritorna la data di creazione di ogni file excel
+            fileturni = openpyxl.load_workbook(file_excel)  # file excel da verificare
+            data_modifca = fileturni.properties.modified
+            return data_modifca
+
         """cerca i 2 file piu recenti nella directory fornita,senza tener conto dei doppioni"""
         # ELENCA TUTTI I FILE NELLA DIRECTORY DEL FILE SELEZIONATO
-        listafiledir = glob.glob(directory + "//*")             # elenca in una lista i file presenti nella directory
+        listafiledir = glob.glob(directory + "//*")  # elenca in una lista i file presenti nella directory
 
         # ELENCA SOLO I FILE (no cartelle) CONTENENTI "Tabellone" con estensione .xslx
         tabelloni = []
@@ -128,7 +134,7 @@ class FileTurni:
                     if str(filex).endswith(".xlsx"):  # controlla estensione .xslx
                         tabelloni.append(filex)
 
-        files = sorted(tabelloni, key=os.path.getmtime)  # restituisce i file piu recenti
+        files = sorted(tabelloni, key=data_modifica_fExel)  # restituisce i file piu recenti
 
         def hash_file(path, blocksize=65536):  # generatore md5
             with open(path, 'rb') as afile:
