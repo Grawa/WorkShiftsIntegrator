@@ -314,7 +314,7 @@
           </font>
          </property>
          <property name="text">
-          <string>Tabelloni (ultimi 2 periodi/mesi):</string>
+          <string>Tabelloni (selez.automatica ultimi 2 mesi/periodi):</string>
          </property>
         </widget>
        </item>

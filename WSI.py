@@ -469,7 +469,7 @@ class Ui(QWidget):
             time.sleep(5)
 
     def default_suoneria_pulsante(self):
-        self.lineEdit_suoneria.setText("content://com.android.externalstorage.documents/document/primary%3ARingtones%2Fsuoneria.ogg")  # la codifica è in UTF-8 dopo "primary"
+        self.lineEdit_suoneria.setText("content://com.android.externalstorage.documents/document/primary%3ASuonerie%2Fsuoneria.ogg")  # la codifica è in UTF-8 dopo "primary"
 
     def _google_drive_run_check(self):
         listatask = subprocess.check_output("tasklist")
@@ -668,8 +668,8 @@ class Ui(QWidget):
         0) Importante: solo per il primo utilizzo!
             Assicurarsi che il file della suoneria si trovi nel percorso e cartella 
             corretti sul dispositivo android (compatibile con android 6.0 o superiore).
-            Impostare il percorso manualmente o copiare la cartella "Ringtones"
-            sulla sdcard del dispositivo... (sdcard/Ringtones/suoneria.ogg)  
+            Impostare il percorso manualmente o copiare la cartella "Suonerie"
+            sulla sdcard del dispositivo... (sdcard/Suonerie/suoneria.ogg)  
     
             
         1) Fare il backup del database da cellulare (consigliato su Google Drive*)...
@@ -682,7 +682,9 @@ class Ui(QWidget):
             (verrà individuato automaticamente il più recente)
             
         3) Selezionare la cartella dove presenti i file del Tabellone**
-        (verranno individuati il più recente e quello del periodo precedente)
+        (verrà individuato il più recente e anche quello del periodo precedente)
+        accertarsi che siano presenti gli ultimi due periodi dei turni (es.
+        mese corrente e mese scorso)
             
         4) Selezionare il dipendente da inserire
         
@@ -706,9 +708,9 @@ class Ui(QWidget):
         rispettivamente la parola "Timetune Backup" e
         la parola "Tabellone".
           
-        I file Tabellone non devono essere originali (non 
-        modificati esternamente) altrimenti il sistema potrebbe 
-        non riconoscere quello più recente dal meno recente.  
+        I file Database e i Tabelloni dei turni devono essere  
+        originali (non modificati) affinchè il sistema li
+        riconosca correttamente dal più recente al meno recente.  
         Stessa regola vale anche per i file database.
         """)
 
