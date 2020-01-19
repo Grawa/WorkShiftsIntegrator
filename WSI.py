@@ -117,7 +117,7 @@ class FileTurni:
     @staticmethod
     def cerca_tabelloni_old_new(directory):
 
-        def data_modifica_fExel(file_excel):  # Ritorna la data di creazione di ogni file excel
+        def data_modifica_fexel(file_excel):  # Ritorna la data di creazione di ogni file excel
             fileturni = openpyxl.load_workbook(file_excel)  # file excel da verificare
             data_modifca = fileturni.properties.modified
             return data_modifca
@@ -134,7 +134,7 @@ class FileTurni:
                     if str(filex).endswith(".xlsx"):  # controlla estensione .xslx
                         tabelloni.append(filex)
 
-        files = sorted(tabelloni, key=data_modifica_fExel)  # restituisce i file piu recenti
+        files = sorted(tabelloni, key=data_modifica_fexel)  # restituisce i file piu recenti
 
         def hash_file(path, blocksize=65536):  # generatore md5
             with open(path, 'rb') as afile:
@@ -236,7 +236,7 @@ class DBTurni:
 
     def ottimizza_db(self):
         """ottimizza il database: elimina i vecchi turni inattivi"""
-        return self.comando_sql("DELETE FROM reminders WHERE reminder_active='0';") #fixme crea un sistema per rimuovere i vecchi turni -vari db istances,events_notifications,events
+        return self.comando_sql("DELETE FROM reminders WHERE reminder_active='0';")  #fixme crea un sistema per rimuovere i vecchi turni -vari db istances,events_notifications,events
 
     def scrivi_turno(self, turno, data, note, ora_notifica, parcheggio, perc_suoneria, sveglia):
         """
