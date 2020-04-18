@@ -236,7 +236,13 @@ class DBTurni:
 
     def ottimizza_db(self):
         """ottimizza il database: elimina i vecchi turni inattivi"""
-        return self.comando_sql("DELETE FROM reminders WHERE reminder_active='0';")  #fixme crea un sistema per rimuovere i vecchi turni -vari db istances,events_notifications,events
+        idmin2del = self.comando_sql("SELECT MIN(instances_item_id) FROM instances WHERE instances_item_id > 0;")  # trova il record meno recente(diverso da 0) tra quelli presenti nella settimana attuale
+        idmin2delf = idmin2del.pop(0)  # Rimuove il record dalla lista
+        idmin2delf2 = idmin2delf[0]  # Rimuove il record dalla tupla
+        delete = self.comando_sql(f"DELETE FROM event_notifications WHERE event_notif_event_id < {idmin2delf2};")  # cancella i vecchi record precedenti basandosi sul "record meno recente" trovato prima
+        delete1 = self.comando_sql(f"DELETE FROM events WHERE _id < {idmin2delf2};")  # cancella i vecchi record precedenti basandosi sul "record meno recente" trovato prima
+
+        return idmin2del, delete, delete1
 
     def scrivi_turno(self, turno, data, note, ora_notifica, parcheggio, perc_suoneria, sveglia):
         """
