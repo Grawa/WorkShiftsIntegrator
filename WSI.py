@@ -236,7 +236,7 @@ class DBTurni:
 
     def ottimizza_db(self):
         """ottimizza il database: elimina i vecchi turni inattivi"""
-        idmin2del = self.comando_sql("SELECT MIN(instances_item_id) FROM instances WHERE instances_item_id > 0;")  # trova il record meno recente(diverso da 0) tra quelli presenti nella settimana attuale
+        idmin2del = self.comando_sql("SELECT MIN(instances_item_id) FROM instances WHERE instances_item_id > 0;")  # trova il record meno recente (diverso da 0) tra quelli presenti nella settimana attuale
         idmin2delf = idmin2del.pop(0)  # Rimuove il record dalla lista
         idmin2delf2 = idmin2delf[0]  # Rimuove il record dalla tupla
         delete = self.comando_sql(f"DELETE FROM event_notifications WHERE event_notif_event_id < {idmin2delf2};")  # cancella i vecchi record precedenti basandosi sul "record meno recente" trovato prima
