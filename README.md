@@ -16,7 +16,7 @@ Il programma aggiunge dei turni di lavoro ad un database dell'app (di terze part
 - Comandi SQL manuali per il database
 
 ## Installazione
-Su windows 10 (ez):
+Su windows 10:
 1. Installare Python 3.8
 2. Avviare "Installa moduli aggiuntivi.cmd"
 3. Avviare "Avvia WSI.cmd"
