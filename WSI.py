@@ -676,7 +676,10 @@ class Ui(QWidget):
             corretti sul dispositivo android (compatibile con android 6.0 o superiore).
             Impostare il percorso manualmente o copiare la cartella "Suonerie"
             sulla sdcard del dispositivo... (sdcard/Suonerie/suoneria.ogg)  
-    
+            Se non viene riconosciuto il percorso della suoneria 
+            potrebbe essere necessario andare su impostazioni> backup>
+            esegui backup del database > (clicca sui 3 puntini di opzioni) >
+            (clicca su "mostra memoria interna") e poi ripristina il database.
             
         1) Fare il backup del database da cellulare (consigliato su Google Drive*)...
             (app TimeTune>Impostazioni>Backup)
