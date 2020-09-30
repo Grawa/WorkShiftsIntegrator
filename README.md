@@ -30,3 +30,7 @@ pip install PyQt5
 pip install PyQt5-stubs
 ```
 
+PROGETTO SOSPESO
+Al momento non è garantito il funzionamento.
+Potrebbe essere necessario creare il DB iniziale con una vecchia release di timetune 2.x
+
