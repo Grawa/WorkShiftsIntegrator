@@ -31,6 +31,6 @@ pip install PyQt5-stubs
 ```
 
 
-* Verificato funzionamento fino alla rel. di Timetune v2.9.3 
-* Nota: Deve esserci almeno un "evento" già memorizzato sul database per poter scrivere i turni sul DB, altrimenti alla prima scrittura si otterrà un errore.
+## Verificato funzionamento fino alla rel. di Timetune v2.9.3 
+## Nota: Deve esserci almeno un "evento" già memorizzato sul database per poter scrivere i turni sul DB, altrimenti alla prima scrittura si otterrà un errore.
 
