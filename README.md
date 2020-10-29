@@ -30,7 +30,7 @@ pip install PyQt5
 pip install PyQt5-stubs
 ```
 
-PROGETTO SOSPESO
-Al momento non è garantito il funzionamento.
-Potrebbe essere necessario creare il DB iniziale con una vecchia release di timetune 2.x
+
+* Verificato funzionamento fino alla rel. di Timetune v2.9.3 
+* Nota: Deve esserci almeno un "evento" già memorizzato sul database per poter scrivere i turni sul DB, altrimenti alla prima scrittura si otterrà un errore.
 
